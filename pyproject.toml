@@ -1,0 +1,9 @@
+[project]
+name = "tofea"
+description = "Finite Element Analysis for Topology Optimization"
+version = "0.0.1"
+authors = [{ name = "Yannick Augenstein" }]
+dependencies = ["numpy", "scipy", "sympy", "autograd"]
+
+[build-system]
+requires = ["setuptools"]
