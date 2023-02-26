@@ -1,5 +1,3 @@
-from functools import cached_property
-
 import numpy as np
 import sympy
 
@@ -15,19 +13,21 @@ class Element:
         shape_list = np.concatenate([x * np.asarray(rule) for x in shape_funcs])
         return tuple(map(sympy.diff, shape_list, clist))
 
+    @property
     def shape_funcs(self):
         raise NotImplementedError
 
+    @property
     def get_element(self):
         raise NotImplementedError
 
 
 class Q4Element(Element):
-    @cached_property
+    @property
     def symbols(self):
         return sympy.symbols("a b x y", real=True)
 
-    @cached_property
+    @property
     def shape_funcs(self):
         a, b, x, y = self.symbols
         return [
@@ -55,7 +55,7 @@ class Q4Element_K(Q4Element):
             ]
         )
 
-        C = (E / (1 - nu ** 2)) * sympy.Matrix(
+        C = (E / (1 - nu**2)) * sympy.Matrix(
             [[1, nu, 0], [nu, 1, 0], [0, 0, (1 - nu) / 2]]
         )
 
@@ -94,11 +94,11 @@ class Q4Element_T(Q4Element):
 
 
 class H8Element(Element):
-    @cached_property
+    @property
     def symbols(self):
         return sympy.symbols("a b c x y z", real=True)
 
-    @cached_property
+    @property
     def shape_funcs(self):
         a, b, c, x, y, z = self.symbols
         return [
