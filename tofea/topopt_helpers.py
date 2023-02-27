@@ -9,6 +9,22 @@ defvjp(
 )
 
 
+def sigmoid_projection(x, a, b=0.5):
+    num = np.tanh(a * b) + np.tanh(a * (x - b))
+    denom = np.tanh(a * b) + np.tanh(a * (1 - b))
+    return num / denom
+
+
+def sigmoid_parametrization(shape, sigma, alpha, beta=0.5):
+    def _parametrization(x):
+        x = np.reshape(x, shape)
+        x = gaussian_filter(x, sigma)
+        x = sigmoid_projection(x, alpha, beta)
+        return x
+
+    return _parametrization
+
+
 def simp_projection(x, vmin, vmax, penalty=3.0):
     return vmin + x**penalty * (vmin - vmax)
 
@@ -21,3 +37,7 @@ def simp_parametrization(shape, sigma, vmin, vmax, penalty=3.0):
         return x
 
     return _parametrization
+
+
+def gray_indicator(x):
+    return np.mean(4 * x * (1 - x))
