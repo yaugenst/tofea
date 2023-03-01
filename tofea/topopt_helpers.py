@@ -15,12 +15,12 @@ def sigmoid_projection(x, a, b=0.5):
     return num / denom
 
 
-def sigmoid_parametrization(shape, sigma, alpha, beta=0.5):
+def sigmoid_parametrization(shape, sigma, alpha, beta=0.5, flat=True):
     def _parametrization(x):
         x = np.reshape(x, shape)
         x = gaussian_filter(x, sigma)
         x = sigmoid_projection(x, alpha, beta)
-        return x
+        return x.ravel() if flat else x
 
     return _parametrization
 
@@ -29,12 +29,12 @@ def simp_projection(x, vmin, vmax, penalty=3.0):
     return vmin + x**penalty * (vmin - vmax)
 
 
-def simp_parametrization(shape, sigma, vmin, vmax, penalty=3.0):
+def simp_parametrization(shape, sigma, vmin, vmax, penalty=3.0, flat=True):
     def _parametrization(x):
         x = np.reshape(x, shape)
         x = gaussian_filter(x, sigma)
         x = simp_projection(x, vmin, vmax, penalty)
-        return x
+        return x.ravel() if flat else x
 
     return _parametrization
 
