@@ -1,3 +1,3 @@
 # TOFEA
 
-Simple differentiable implementations of heat conductivity and compliance problems for topology optimization.
+Simple [autograd](https://github.com/HIPS/autograd)-differentiable finite element analysis for heat conductivity and compliance problems.
