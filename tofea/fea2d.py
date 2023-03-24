@@ -18,50 +18,45 @@ class FEA2D:
 
         defvjp(self.fea, self.fea_vjp)
 
-    @staticmethod
-    def inverse_permutation(indices):
-        inverse_perm = np.zeros(len(indices), dtype=np.int64)
-        inverse_perm[indices] = np.arange(len(indices), dtype=np.int64)
-        return inverse_perm
+    @cached_property
+    def index_map(self):
+        indices = np.concatenate([self.freedofs, self.fixdofs])
+        imap = np.zeros(len(indices), dtype="i4")
+        imap[indices] = np.arange(len(indices), dtype="i4")
+        return imap
 
-    def _get_dof_indices(self, k_ylist, k_xlist):
-        index_map = self.inverse_permutation(
-            np.concatenate([self.freedofs, self.fixdofs])
+    @cached_property
+    def e2sdofmap(self):
+        nx, ny = self.shape
+        idxs = np.arange(nx * ny, dtype="i4")
+        return np.add(
+            self.dofmap[None],
+            (self.dof_dim * (idxs % ny + idxs // ny * (ny + 1)))[:, None],
         )
-        keep = np.isin(k_xlist, self.freedofs) & np.isin(k_ylist, self.freedofs)
-        i = index_map[k_ylist][keep]
-        j = index_map[k_xlist][keep]
-        return index_map, keep, np.stack([i, j])
+
+    @cached_property
+    def keep_indices(self):
+        i, j = np.meshgrid(range(len(self.dofmap)), range(len(self.dofmap)))
+        ix = self.e2sdofmap[:, i].ravel()
+        iy = self.e2sdofmap[:, j].ravel()
+        keep = np.isin(ix, self.freedofs) & np.isin(iy, self.freedofs)
+        indices = np.stack([self.index_map[ix][keep], self.index_map[iy][keep]])
+        return keep, indices
 
     def global_mat(self, x):
-        i, j = np.meshgrid(range(len(self.dofmap)), range(len(self.dofmap)))
-        nelx, nely = x.shape
-
-        vals, ix, iy = [], [], []
-        for elx in range(nelx):
-            for ely in range(nely):
-                e2sdofmap = self.dofmap + self.dof_dim * (ely + elx * (nely + 1))
-                v = x[elx, ely] * self.element
-                ix.append(e2sdofmap[i])
-                iy.append(e2sdofmap[j])
-                vals.append(v[i, j])
-        vals = np.asarray(vals).ravel()
-        ix = np.asarray(ix, dtype=int).ravel()
-        iy = np.asarray(iy, dtype=int).ravel()
-        _, keep, indices = self._get_dof_indices(ix, iy)
-        return coo_matrix((vals[keep], indices)).tocsr()
+        x = np.reshape(x, (-1, 1, 1)) * self.element[None]
+        x = x.ravel()
+        keep, indices = self.keep_indices
+        return coo_matrix((x[keep], indices)).tocsr()
 
     @staticmethod
     @primitive
     def fea(x, self):
-        X, Y = np.indices(x.shape)
-        e2sdofmap = np.expand_dims(self.dofmap.reshape(-1, 1), axis=1)
-        e2sdofmap = np.add(e2sdofmap, Y + X * (x.shape[1] + 1))
-
         system = self.global_mat(x)
         self.fea_result[self.freedofs] = spsolve(system, self.load[self.freedofs])
 
-        Qe = self.fea_result[e2sdofmap]
+        dm = np.moveaxis(np.reshape(self.e2sdofmap, (*self.shape, -1)), -1, 0)
+        Qe = self.fea_result[dm]
         QeK = np.tensordot(Qe, self.element, axes=(0, 0))
         Qe_T = np.swapaxes(Qe, 2, 1).T
         self._QeKQe = np.einsum("mnk,mnk->mn", QeK, Qe_T)
@@ -87,7 +82,7 @@ class FEA2D_K(FEA2D):
         _, nely = self.shape
         b = np.arange(2 * (nely + 1), 2 * (nely + 1) + 2)
         a = b + 2
-        return np.r_[2, 3, a, b, 0, 1]
+        return np.r_[2, 3, a, b, 0, 1].astype("i4")
 
 
 class FEA2D_T(FEA2D):
@@ -100,4 +95,4 @@ class FEA2D_T(FEA2D):
     @cached_property
     def dofmap(self):
         _, nely = self.shape
-        return np.r_[1, (nely + 2), (nely + 1), 0]
+        return np.r_[1, (nely + 2), (nely + 1), 0].astype("i4")
