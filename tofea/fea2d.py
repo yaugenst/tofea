@@ -72,7 +72,7 @@ class FEA2D_K(FEA2D):
 
     @cached_property
     def element(self):
-        return Q4Element_K().get_element()
+        return Q4Element_K().element
 
     @cached_property
     def dofmap(self):
@@ -87,7 +87,7 @@ class FEA2D_T(FEA2D):
 
     @cached_property
     def element(self):
-        return Q4Element_T().get_element()
+        return Q4Element_T().element
 
     @cached_property
     def dofmap(self):

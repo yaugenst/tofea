@@ -1,34 +1,38 @@
+from dataclasses import dataclass
+from functools import cached_property
+from typing import Iterable
+
 import numpy as np
 import sympy
 
 __all__ = ["Q4Element_K", "Q4Element_T", "H8Element_K", "H8Element_T"]
 
 
+@dataclass(frozen=True, slots=True, kw_only=True)
 class Element:
-    _dx, _dy, _dz = 0.5, 0.5, 0.5  # dimensions
-    _eps = 1e-6
+    dx: float = 0.5
+    dy: float = 0.5
+    dz: float = 0.5
+    eps: float = 1e-6
+    dtype: type = np.float64
 
     @staticmethod
-    def _b_entries(rule, shape_funcs, clist):
+    def _b_entries(
+        rule: Iterable[int],
+        shape_funcs: Iterable[sympy.Expr],
+        clist: Iterable[sympy.Symbol],
+    ) -> tuple[sympy.Expr]:
         shape_list = np.concatenate([x * np.asarray(rule) for x in shape_funcs])
         return tuple(map(sympy.diff, shape_list, clist))
-
-    @property
-    def shape_funcs(self):
-        raise NotImplementedError
-
-    @property
-    def get_element(self):
-        raise NotImplementedError
 
 
 class Q4Element(Element):
     @property
-    def symbols(self):
+    def symbols(self) -> tuple[sympy.Symbol, ...]:
         return sympy.symbols("a b x y", real=True)
 
     @property
-    def shape_funcs(self):
+    def shape_funcs(self) -> list[sympy.Expr]:
         a, b, x, y = self.symbols
         return [
             (a - x) * (b - y) / (4 * a * b),
@@ -38,12 +42,33 @@ class Q4Element(Element):
         ]
 
 
-class Q4Element_K(Q4Element):
-    def __init__(self, e=1.0, nu=1 / 3):
-        self.e = e
-        self.nu = nu
+class H8Element(Element):
+    @property
+    def symbols(self) -> tuple[sympy.Symbol, ...]:
+        return sympy.symbols("a b c x y z", real=True)
 
-    def get_element(self):
+    @property
+    def shape_funcs(self) -> list[sympy.Expr]:
+        a, b, c, x, y, z = self.symbols
+        return [
+            (a - x) * (b - y) * (c - z) / (8 * a * b * c),
+            (a + x) * (b - y) * (c - z) / (8 * a * b * c),
+            (a + x) * (b + y) * (c - z) / (8 * a * b * c),
+            (a - x) * (b + y) * (c - z) / (8 * a * b * c),
+            (a - x) * (b - y) * (c + z) / (8 * a * b * c),
+            (a + x) * (b - y) * (c + z) / (8 * a * b * c),
+            (a + x) * (b + y) * (c + z) / (8 * a * b * c),
+            (a - x) * (b + y) * (c + z) / (8 * a * b * c),
+        ]
+
+
+@dataclass(frozen=True, slots=True)
+class Q4Element_K(Q4Element):
+    e: float = 1.0
+    nu: float = 1 / 3
+
+    @cached_property
+    def element(self) -> np.ndarray:
         a, b, x, y = self.symbols
         E, nu = sympy.symbols("E nu", real=True)
 
@@ -62,18 +87,19 @@ class Q4Element_K(Q4Element):
         dK = B.T * C * B
         K = dK.integrate((x, -a, a), (y, -b, b))
         K = np.array(
-            K.subs({a: self._dx, b: self._dy, E: self.e, nu: self.nu}),
-            dtype=np.float64,
+            K.subs({a: self.dx, b: self.dy, E: self.e, nu: self.nu}),
+            dtype=self.dtype,
         )
-        K[np.abs(K) < self._eps] = 0
+        K[np.abs(K) < self.eps] = 0
         return K
 
 
+@dataclass(frozen=True, slots=True)
 class Q4Element_T(Q4Element):
-    def __init__(self, k=1.0):
-        self.k = k
+    k: float = 1.0
 
-    def get_element(self):
+    @cached_property
+    def element(self) -> np.ndarray:
         a, b, x, y = self.symbols
         k = sympy.symbols("k", real=True)
 
@@ -88,39 +114,26 @@ class Q4Element_T(Q4Element):
 
         dK = B.T * C * B
         K = dK.integrate((x, -a, a), (y, -b, b))
-        K = np.array(K.subs({a: self._dx, b: self._dy, k: self.k}), dtype=np.float64)
-        K[np.abs(K) < self._eps] = 0
+        K = np.array(K.subs({a: self.dx, b: self.dy, k: self.k}), dtype=self.dtype)
+        K[np.abs(K) < self.eps] = 0
         return K
 
 
-class H8Element(Element):
-    @property
-    def symbols(self):
-        return sympy.symbols("a b c x y z", real=True)
-
-    @property
-    def shape_funcs(self):
-        a, b, c, x, y, z = self.symbols
-        return [
-            (a - x) * (b - y) * (c - z) / (8 * a * b * c),
-            (a + x) * (b - y) * (c - z) / (8 * a * b * c),
-            (a + x) * (b + y) * (c - z) / (8 * a * b * c),
-            (a - x) * (b + y) * (c - z) / (8 * a * b * c),
-            (a - x) * (b - y) * (c + z) / (8 * a * b * c),
-            (a + x) * (b - y) * (c + z) / (8 * a * b * c),
-            (a + x) * (b + y) * (c + z) / (8 * a * b * c),
-            (a - x) * (b + y) * (c + z) / (8 * a * b * c),
-        ]
-
-
+@dataclass(frozen=True, slots=True)
 class H8Element_K(H8Element):
-    def __init__(self, e=1.0, nu=1 / 3):
-        self.e = e
-        self.nu = nu
-        self.G = e / (2 * (1 + nu))
-        self.g = e / ((1 + nu) * (1 - 2 * nu))
+    e: float = 1.0
+    nu: float = 1 / 3
 
-    def get_element(self):
+    @property
+    def G(self) -> float:
+        return self.e / (2 * (1 + self.nu))
+
+    @property
+    def g(self) -> float:
+        return self.e / ((1 + self.nu) * (1 - 2 * self.nu))
+
+    @cached_property
+    def element(self) -> np.ndarray:
         a, b, c, x, y, z = self.symbols
         E, nu, g, G = sympy.symbols("E nu g G", real=True)
         o = sympy.symbols("o", real=True)  # dummy symbol
@@ -152,26 +165,27 @@ class H8Element_K(H8Element):
         K = np.array(
             K.subs(
                 {
-                    a: self._dx,
-                    b: self._dy,
-                    c: self._dz,
+                    a: self.dx,
+                    b: self.dy,
+                    c: self.dz,
                     E: self.e,
                     nu: self.nu,
                     g: self.g,
                     G: self.G,
                 }
             ),
-            dtype=np.float64,
+            dtype=self.dtype,
         )
-        K[np.abs(K) < self._eps] = 0
+        K[np.abs(K) < self.eps] = 0
         return K
 
 
+@dataclass(frozen=True, slots=True)
 class H8Element_T(H8Element):
-    def __init__(self, k=1.0):
-        self.k = k
+    k: float = 1.0
 
-    def get_element(self):
+    @cached_property
+    def element(self) -> np.ndarray:
         a, b, c, x, y, z = self.symbols
         k = sympy.symbols("k")
 
@@ -188,8 +202,8 @@ class H8Element_T(H8Element):
         dK = B.T * C * B
         K = dK.integrate((x, -a, a), (y, -b, b), (z, -c, c))
         K = np.array(
-            K.subs({a: self._dx, b: self._dy, c: self._dz, k: self.k}),
-            dtype=np.float64,
+            K.subs({a: self.dx, b: self.dy, c: self.dz, k: self.k}),
+            dtype=self.dtype,
         )
-        K[np.abs(K) < self._eps] = 0
+        K[np.abs(K) < self.eps] = 0
         return K
