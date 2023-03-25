@@ -4,6 +4,7 @@ from typing import Iterable
 
 import numpy as np
 import sympy
+from numpy.typing import NDArray
 
 __all__ = ["Q4Element_K", "Q4Element_T", "H8Element_K", "H8Element_T"]
 
@@ -68,7 +69,7 @@ class Q4Element_K(Q4Element):
     nu: float = 1 / 3
 
     @cached_property
-    def element(self) -> np.ndarray:
+    def element(self) -> NDArray:
         a, b, x, y = self.symbols
         E, nu = sympy.symbols("E nu", real=True)
 
@@ -99,7 +100,7 @@ class Q4Element_T(Q4Element):
     k: float = 1.0
 
     @cached_property
-    def element(self) -> np.ndarray:
+    def element(self) -> NDArray:
         a, b, x, y = self.symbols
         k = sympy.symbols("k", real=True)
 
@@ -133,7 +134,7 @@ class H8Element_K(H8Element):
         return self.e / ((1 + self.nu) * (1 - 2 * self.nu))
 
     @cached_property
-    def element(self) -> np.ndarray:
+    def element(self) -> NDArray:
         a, b, c, x, y, z = self.symbols
         E, nu, g, G = sympy.symbols("E nu g G", real=True)
         o = sympy.symbols("o", real=True)  # dummy symbol
@@ -185,7 +186,7 @@ class H8Element_T(H8Element):
     k: float = 1.0
 
     @cached_property
-    def element(self) -> np.ndarray:
+    def element(self) -> NDArray:
         a, b, c, x, y, z = self.symbols
         k = sympy.symbols("k")
 
