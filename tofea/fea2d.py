@@ -14,7 +14,8 @@ class FEA2D:
         self.load = load.ravel()
         self.fixdofs = dofs[fixed].ravel()
         self.freedofs = dofs[~fixed].ravel()
-        self.fea_result = np.zeros(dofs.size)
+        self._u = np.zeros(dofs.size)
+        self._c = np.zeros(domain)
 
         defvjp(self.fea, self.fea_vjp)
 
@@ -53,18 +54,14 @@ class FEA2D:
     @primitive
     def fea(x, self):
         system = self.global_mat(x)
-        self.fea_result[self.freedofs] = spsolve(system, self.load[self.freedofs])
-
-        dm = np.moveaxis(np.reshape(self.e2sdofmap, (*self.shape, -1)), -1, 0)
-        Qe = self.fea_result[dm]
-        QeK = np.tensordot(Qe, self.element, axes=(0, 0))
-        Qe_T = np.swapaxes(Qe, 2, 1).T
-        self._QeKQe = np.einsum("mnk,mnk->mn", QeK, Qe_T)
-        return np.sum(x * self._QeKQe)
+        dm = np.reshape(self.e2sdofmap.T, (-1, *self.shape))
+        self._u[self.freedofs] = spsolve(system, self.load[self.freedofs])
+        self._c[:] = np.einsum("ixy,ij,jxy->xy", self._u[dm], self.element, self._u[dm])
+        return np.sum(x * self._c)
 
     @staticmethod
     def fea_vjp(ans, x, self):
-        return lambda g: -g * self._QeKQe
+        return lambda g: -g * self._c
 
     def __call__(self, x):
         return self.fea(x, self)
