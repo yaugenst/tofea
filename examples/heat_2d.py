@@ -20,7 +20,6 @@ fixed = np.zeros_like(dofs, dtype=bool)
 load = np.zeros_like(dofs)
 
 fixed[40:60, -1] = 1
-
 load[:, 0] = 1
 
 x0 = np.full(shape, volfrac)
@@ -31,7 +30,7 @@ parametrization = simp_parametrization(shape, sigma, cmin, cmax)
 plt.ion()
 fig, ax = plt.subplots(2, 1)
 im1 = ax[0].imshow(parametrization(x0).T, cmap="gray_r", vmin=cmin, vmax=cmax)
-ax[1].imshow(np.zeros_like(x0), cmap="magma", vmin=0, vmax=1)
+ax[1].imshow(np.zeros_like(x0), cmap="magma")
 fig.tight_layout()
 
 
@@ -51,9 +50,8 @@ def nlopt_obj(x, gd):
 
     im1.set_data(design.T)
     ax[1].cla()
-    ax[1].imshow(-fem._QeKQe.T, cmap="magma")
+    ax[1].imshow((design * fem._c).T, cmap="magma")
     plt.pause(0.01)
-    print("HI")
 
     return c
 

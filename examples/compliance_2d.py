@@ -53,18 +53,18 @@ def nlopt_obj(x, gd):
     im1.set_data(design.T)
     ax[1].cla()
     ax[1].imshow(
-        design.T * np.reshape(fem.displacement, load.shape)[1:, 1:, 0].T,
+        design.T * np.reshape(fem._u, load.shape)[1:, 1:, 0].T,
         cmap="RdBu",
         norm=CenteredNorm(),
     )
     ax[2].cla()
     ax[2].imshow(
-        design.T * np.reshape(fem.displacement, load.shape)[1:, 1:, 1].T,
+        design.T * np.reshape(fem._u, load.shape)[1:, 1:, 1].T,
         cmap="RdBu",
         norm=CenteredNorm(),
     )
     ax[3].cla()
-    ax[3].imshow(-fem._QeKQe.T, cmap="magma")
+    ax[3].imshow(-fem._c.T, cmap="magma")
     plt.pause(0.01)
 
     return c
