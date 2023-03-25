@@ -15,7 +15,7 @@ def sigmoid_projection(x, a, b=0.5):
     return num / denom
 
 
-def sigmoid_parametrization(shape, sigma, alpha, beta=0.5, flat=True):
+def sigmoid_parametrization(shape, sigma, alpha, beta=0.5, flat=False):
     def _parametrization(x):
         x = np.reshape(x, shape)
         x = gaussian_filter(x, sigma)
@@ -26,10 +26,10 @@ def sigmoid_parametrization(shape, sigma, alpha, beta=0.5, flat=True):
 
 
 def simp_projection(x, vmin, vmax, penalty=3.0):
-    return vmin + x**penalty * (vmin - vmax)
+    return vmin + x**penalty * (vmax - vmin)
 
 
-def simp_parametrization(shape, sigma, vmin, vmax, penalty=3.0, flat=True):
+def simp_parametrization(shape, sigma, vmin, vmax, penalty=3.0, flat=False):
     def _parametrization(x):
         x = np.reshape(x, shape)
         x = gaussian_filter(x, sigma)
