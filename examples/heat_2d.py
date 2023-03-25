@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-import autograd.numpy as np
+import autograd.numpy as anp
 import matplotlib.pyplot as plt
 import nlopt
+import numpy as np
 from autograd import tensor_jacobian_product, value_and_grad
 
 from tofea.fea2d import FEA2D_T
@@ -15,17 +16,15 @@ shape = (100, 100)
 nelx, nely = shape
 cmin, cmax = 1.0, 1e6
 
-dofs = np.arange((nelx + 1) * (nely + 1)).reshape(nelx + 1, nely + 1)
-fixed = np.zeros_like(dofs, dtype=bool)
-load = np.zeros_like(dofs)
+fixed = np.zeros((nelx + 1, nely + 1), dtype="?")
+load = np.zeros_like(fixed)
 
 fixed[40:60, -1] = 1
 load[:, 0] = 1
 
-x0 = np.full(shape, volfrac)
-
-fem = FEA2D_T(shape, dofs, fixed, load)
+fem = FEA2D_T(fixed, load)
 parametrization = simp_parametrization(shape, sigma, cmin, cmax)
+x0 = np.full(shape, volfrac)
 
 plt.ion()
 fig, ax = plt.subplots(2, 1)
@@ -35,7 +34,7 @@ fig.tight_layout()
 
 
 def volume_constraint(x, gd):
-    v, g = value_and_grad(np.mean)(x)
+    v, g = value_and_grad(anp.mean)(x)
     if gd.size > 0:
         gd[:] = g
     return v - volfrac

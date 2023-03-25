@@ -23,9 +23,9 @@ load = np.zeros_like(dofs)
 fixed[0, :, :] = 1
 load[-1, -1, 1] = 1
 
-x0 = np.full(shape, volfrac)
-fem = FEA2D_K(shape, dofs, fixed, load)
+fem = FEA2D_K(fixed, load)
 parametrization = simp_parametrization(shape, sigma, emin, emax)
+x0 = np.full(shape, volfrac)
 
 plt.ion()
 fig, ax = plt.subplots(4, 1)
