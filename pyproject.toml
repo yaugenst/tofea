@@ -16,6 +16,8 @@ dynamic = ["version"]
 requires-python = ">=3.10"
 dependencies = ["numpy", "scipy", "sympy", "autograd"]
 
+[project.optional-dependencies]
+test = ["pytest"]
 
 [project.urls]
 Source = "https://github.com/mrbaozi/tofea"
