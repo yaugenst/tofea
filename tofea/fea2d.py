@@ -1,26 +1,22 @@
 from functools import cached_property
 
+import autograd.numpy as anp
 import numpy as np
-from autograd.extend import defvjp, primitive
 from numpy.typing import NDArray
-from scipy.sparse import coo_matrix, csr_matrix
-from scipy.sparse.linalg import spsolve
 
-from .elements import Q4Element_K, Q4Element_T
+from tofea.elements import Q4Element_K, Q4Element_T
+from tofea.primitives import solve_coo
 
 
 class FEA2D:
-    def __init__(self, fixed: NDArray[np.bool_], load: NDArray[np.bool_]) -> None:
+    def __init__(self, fixed: NDArray[np.bool_]) -> None:
         nx, ny = fixed.shape[:2]
         dofs = np.arange(fixed.size, dtype=np.uint32).reshape(fixed.shape)
         self.out_shape = (nx - 1, ny - 1)
-        self.load = load.ravel()
         self.fixdofs = dofs[fixed].ravel()
         self.freedofs = dofs[~fixed].ravel()
         self._u = np.zeros(dofs.size)
         self._c = np.zeros(self.out_shape)
-
-        defvjp(self.fea, self.fea_vjp)
 
     @cached_property
     def index_map(self) -> NDArray[np.uint32]:
@@ -49,27 +45,21 @@ class FEA2D:
         indices = np.stack([self.index_map[ix][keep], self.index_map[iy][keep]])
         return keep, indices
 
-    def global_mat(self, x: NDArray) -> csr_matrix:
+    def global_mat(self, x: NDArray) -> tuple[NDArray, NDArray]:
         x = np.reshape(x, (-1, 1, 1)) * self.element[None]
         x = x.ravel()
         keep, indices = self.keep_indices
-        return coo_matrix((x[keep], indices)).tocsr()
+        return x[keep], indices
 
-    @staticmethod
-    @primitive
-    def fea(x: NDArray, self) -> float:
-        system = self.global_mat(x)
-        dm = np.reshape(self.e2sdofmap.T, (-1, *self.out_shape))
-        self._u[self.freedofs] = spsolve(system, self.load[self.freedofs])
-        self._c[:] = np.einsum("ixy,ij,jxy->xy", self._u[dm], self.element, self._u[dm])
-        return np.sum(x * self._c)
+    def __call__(self, x: NDArray, b: NDArray) -> float:
+        data, indices = self.global_mat(x)
+        u_nz = solve_coo(data, indices, b.ravel()[self.freedofs])
+        u = anp.concatenate([u_nz, np.zeros(len(self.fixdofs))])[self.index_map]
 
-    @staticmethod
-    def fea_vjp(ans: float, x: NDArray, self) -> NDArray:
-        return lambda g: -g * self._c
+        dofmap = np.reshape(self.e2sdofmap.T, (-1, *self.out_shape))
+        c = anp.einsum("ixy,ij,jxy->xy", u[dofmap], self.element, u[dofmap])
 
-    def __call__(self, x: NDArray) -> float:
-        return self.fea(x, self)
+        return anp.sum(c)
 
 
 class FEA2D_K(FEA2D):
