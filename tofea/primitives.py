@@ -1,20 +1,19 @@
 from autograd.extend import defjvp, defvjp, primitive
 from scipy.sparse import coo_matrix
-from scipy.sparse.linalg import splu, spsolve_triangular
+from scipy.sparse.linalg import splu
 
 _ctx = {}
-
-
-def solve_lu(L, U, b):
-    y = spsolve_triangular(L.tocsr(), b, lower=True)
-    x = spsolve_triangular(U.tocsr(), y, lower=False)
-    return x
 
 
 @primitive
 def solve_coo(entries, indices, rhs):
     a = coo_matrix((entries, indices)).tocsc()
-    _ctx["factorization"] = splu(a)
+    _ctx["factorization"] = splu(
+        a,
+        diag_pivot_thresh=0.1,
+        permc_spec="MMD_AT_PLUS_A",
+        options=dict(SymmetricMode=True),
+    )
     return _ctx["factorization"].solve(rhs)
 
 
@@ -32,8 +31,7 @@ defjvp(solve_coo, solve_coo_entries_jvp, None, solve_coo_b_jvp)
 
 def solve_coo_entries_vjp(ans, entries, indices, b):
     def vjp(g):
-        f = _ctx["factorization"]
-        x = solve_lu(f.U.T, f.L.T, g)
+        x = _ctx["factorization"].solve(g, trans="T")
         i, j = indices
         return -x[i] * ans[j]
 
@@ -42,9 +40,7 @@ def solve_coo_entries_vjp(ans, entries, indices, b):
 
 def solve_coo_b_vjp(ans, entries, indices, b):
     def vjp(g):
-        f = _ctx["factorization"]
-        x = solve_lu(f.U.T, f.L.T, g)
-        return x
+        return _ctx["factorization"].solve(g, trans="T")
 
     return vjp
 

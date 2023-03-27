@@ -2,33 +2,16 @@ import numpy as np
 import pytest
 from autograd.test_util import check_grads
 from numpy.testing import assert_allclose
-from scipy.sparse import coo_matrix, csc_matrix
-from scipy.sparse.linalg import splu, spsolve
+from scipy.sparse import coo_matrix
+from scipy.sparse.linalg import spsolve
 
-from tofea.primitives import solve_coo, solve_lu
+from tofea.primitives import solve_coo
 
 
 @pytest.fixture
 def rng():
     seed = 36523523
     return np.random.default_rng(seed)
-
-
-@pytest.mark.parametrize("n", [10, 11])
-def test_solve_lu(rng, n):
-    m = rng.random((n, n))
-    mx = np.sum(np.abs(m), axis=1)
-    np.fill_diagonal(m, mx)
-    m = csc_matrix(m)
-
-    b = rng.random(n)
-
-    f = splu(m)
-    x0 = f.solve(b)
-
-    x1 = solve_lu(f.L, f.U, b)
-
-    assert_allclose(x0, x1)
 
 
 @pytest.mark.parametrize("n", [10, 11])
