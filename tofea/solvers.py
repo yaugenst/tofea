@@ -84,11 +84,31 @@ class CholeskySolver(AbstractSolver):
         """We don't clear the factorization because we are updating it in-place."""
 
 
+class UmfpackSolver(AbstractSolver):
+    def __init__(self, **options):
+        from scikits.umfpack import UMFPACK_A, UMFPACK_At, UmfpackContext
+
+        self._ctx["modes"] = {"N": UMFPACK_A, "T": UMFPACK_At}
+        self._ctx["umfpack"] = UmfpackContext(**options)
+
+    def factor(self, m: csc_matrix | csr_matrix) -> None:
+        self._ctx["umfpack"].numeric(m)
+
+    def solve(self, rhs: NDArray, transpose: bool = False) -> NDArray:
+        mode = self._ctx["modes"]["T"] if transpose else self._ctx["modes"]["N"]
+        return self._ctx["umfpack"].solve(
+            mode, self._ctx["umfpack"].mtx, rhs, autoTranspose=True
+        )
+
+    def clear(self) -> None:
+        self._ctx["umfpack"].free_numeric()
+
+
 scipy_solver = SciPySolver(
     diag_pivot_thresh=0.1,
     permc_spec="MMD_AT_PLUS_A",
     options=dict(SymmetricMode=True),
 )
-
 pardiso_solver = PardisoSolver(mtype=2)
 cholesky_solver = CholeskySolver()
+umfpack_solver = UmfpackSolver()
