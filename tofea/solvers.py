@@ -44,7 +44,7 @@ class PardisoSolver(AbstractSolver):
 
         self._ctx["pardiso"] = partial(pardisoSolver, **options)
 
-    def factor(self, m: csr_matrix) -> None:
+    def factor(self, m: csr_matrix | csc_matrix) -> None:
         self._ctx["factorization"] = self._ctx["pardiso"](m)
         self._ctx["factorization"].factor()
 
@@ -91,7 +91,7 @@ class UmfpackSolver(AbstractSolver):
         self._ctx["modes"] = {"N": UMFPACK_A, "T": UMFPACK_At}
         self._ctx["umfpack"] = UmfpackContext(**options)
 
-    def factor(self, m: csc_matrix | csr_matrix) -> None:
+    def factor(self, m: csc_matrix) -> None:
         self._ctx["umfpack"].numeric(m)
 
     def solve(self, rhs: NDArray, transpose: bool = False) -> NDArray:
@@ -109,6 +109,6 @@ scipy_solver = SciPySolver(
     permc_spec="MMD_AT_PLUS_A",
     options=dict(SymmetricMode=True),
 )
-pardiso_solver = PardisoSolver(mtype=2)
-cholesky_solver = CholeskySolver()
+pardiso_solver = PardisoSolver(mtype=11)
+cholesky_solver = CholeskySolver()  # FIXME: currently broken
 umfpack_solver = UmfpackSolver()
