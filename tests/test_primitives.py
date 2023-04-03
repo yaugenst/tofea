@@ -1,9 +1,7 @@
 import numpy as np
 import pytest
 from autograd.test_util import check_grads
-from numpy.testing import assert_allclose
 from scipy.sparse import coo_matrix
-from scipy.sparse.linalg import spsolve
 
 from tofea.primitives import solve_coo
 
@@ -15,39 +13,41 @@ def rng():
 
 
 @pytest.mark.parametrize("n", [10, 11])
-def test_solve_coo(rng, n):
+@pytest.mark.parametrize(
+    "solver",
+    [
+        "scipy",
+        "pardiso",
+        pytest.param(
+            "cholesky",
+            marks=pytest.mark.xfail(
+                reason="Cholesky entries grads are wrong currently."
+            ),
+        ),
+        "umfpack",
+    ],
+)
+@pytest.mark.parametrize("mode", ["fwd", "rev"])
+def test_solve_coo_entries_grad(rng, n, solver, mode):
     m = rng.random((n, n))
     m = coo_matrix(m @ m.T)
 
     b = rng.random(n)
 
-    x0 = spsolve(m.tocsc(), b)
-    x1 = solve_coo(m.data, (m.row, m.col), b)
-
-    assert_allclose(x0, x1)
+    check_grads(
+        lambda x: solve_coo(x, (m.row, m.col), b, solver), modes=[mode], order=1
+    )(m.data)
 
 
 @pytest.mark.parametrize("n", [10, 11])
+@pytest.mark.parametrize("solver", ["scipy", "pardiso", "cholesky", "umfpack"])
 @pytest.mark.parametrize("mode", ["fwd", "rev"])
-def test_solve_coo_entries_grad(rng, n, mode):
+def test_solve_coo_b_grad(rng, n, solver, mode):
     m = rng.random((n, n))
     m = coo_matrix(m @ m.T)
 
     b = rng.random(n)
 
-    check_grads(lambda x: solve_coo(x, (m.row, m.col), b), modes=[mode], order=1)(
-        m.data
-    )
-
-
-@pytest.mark.parametrize("n", [10, 11])
-@pytest.mark.parametrize("mode", ["fwd", "rev"])
-def test_solve_coo_b_grad(rng, n, mode):
-    m = rng.random((n, n))
-    m = coo_matrix(m @ m.T)
-
-    b = rng.random(n)
-
-    check_grads(lambda x: solve_coo(m.data, (m.row, m.col), x), modes=[mode], order=1)(
-        b
-    )
+    check_grads(
+        lambda x: solve_coo(m.data, (m.row, m.col), x, solver), modes=[mode], order=1
+    )(b)

@@ -1,3 +1,4 @@
+import warnings
 from abc import ABC, abstractmethod
 from functools import partial
 from typing import Any
@@ -7,8 +8,6 @@ from scipy.sparse import csc_matrix, csr_matrix
 
 
 class AbstractSolver(ABC):
-    _ctx: dict[Any] = {}
-
     @abstractmethod
     def factor(self, m: csc_matrix | csr_matrix) -> None:
         ...
@@ -23,6 +22,8 @@ class AbstractSolver(ABC):
 
 
 class SciPySolver(AbstractSolver):
+    _ctx: dict[Any] = {}
+
     def __init__(self, **options):
         from scipy.sparse.linalg import splu
 
@@ -39,6 +40,8 @@ class SciPySolver(AbstractSolver):
 
 
 class PardisoSolver(AbstractSolver):
+    _ctx: dict[Any] = {}
+
     def __init__(self, **options):
         from pyMKL import pardisoSolver
 
@@ -63,6 +66,8 @@ class PardisoSolver(AbstractSolver):
 
 
 class CholeskySolver(AbstractSolver):
+    _ctx: dict[Any] = {}
+
     def __init__(self, **options):
         from sksparse.cholmod import cholesky
 
@@ -75,16 +80,18 @@ class CholeskySolver(AbstractSolver):
             self._ctx["factorization"] = self._ctx["cholesky"](m)
 
     def solve(self, rhs: NDArray, transpose: bool = False) -> NDArray:
-        """Transpose does nothing because Cholesky decopmosition only works for real
+        """Transpose does nothing because Cholesky decomposition only works for real
         symmetric matrices...
         """
         return self._ctx["factorization"].solve_A(rhs)
 
     def clear(self) -> None:
-        """We don't clear the factorization because we are updating it in-place."""
+        self._ctx.pop("factorization", None)
 
 
 class UmfpackSolver(AbstractSolver):
+    _ctx: dict[Any] = {}
+
     def __init__(self, **options):
         from scikits.umfpack import UMFPACK_A, UMFPACK_At, UmfpackContext
 
@@ -109,6 +116,32 @@ scipy_solver = SciPySolver(
     permc_spec="MMD_AT_PLUS_A",
     options=dict(SymmetricMode=True),
 )
-pardiso_solver = PardisoSolver(mtype=11)
-cholesky_solver = CholeskySolver()  # FIXME: currently broken
-umfpack_solver = UmfpackSolver()
+
+try:
+    pardiso_solver = PardisoSolver(mtype=11)
+except ImportError:
+    warnings.warn("pyMKL not found, pardiso_solver unavailable")
+
+try:
+    cholesky_solver = CholeskySolver()
+except ImportError:
+    warnings.warn("scikit-sparse not found, cholesky_solver unavailable")
+
+try:
+    umfpack_solver = UmfpackSolver()
+except ImportError:
+    warnings.warn("scikit-umfpack not found, umfpack_solver unavailable")
+
+
+def get_solver(solver):
+    match solver:
+        case "scipy":
+            return scipy_solver
+        case "pardiso":
+            return pardiso_solver
+        case "cholesky":
+            return cholesky_solver
+        case "umfpack":
+            return umfpack_solver
+        case _:
+            raise ValueError(f"Invalid solver: {solver}")
