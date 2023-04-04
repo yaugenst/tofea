@@ -25,6 +25,7 @@ def rng():
             ),
         ),
         "umfpack",
+        "gpu",
     ],
 )
 @pytest.mark.parametrize("mode", ["fwd", "rev"])
@@ -40,7 +41,7 @@ def test_solve_coo_entries_grad(rng, n, solver, mode):
 
 
 @pytest.mark.parametrize("n", [10, 11])
-@pytest.mark.parametrize("solver", ["scipy", "pardiso", "cholesky", "umfpack"])
+@pytest.mark.parametrize("solver", ["scipy", "pardiso", "cholesky", "umfpack", "gpu"])
 @pytest.mark.parametrize("mode", ["fwd", "rev"])
 def test_solve_coo_b_grad(rng, n, solver, mode):
     m = rng.random((n, n))

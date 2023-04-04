@@ -21,6 +21,7 @@ test = ["pytest"]
 mkl = ["pyMKL"]
 cholmod = ["scikit-sparse"]
 umfpack = ["scikit-umfpack"]
+gpu = ["cupy"]
 
 [project.urls]
 Source = "https://github.com/mrbaozi/tofea"

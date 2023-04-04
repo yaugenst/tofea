@@ -111,6 +111,32 @@ class UmfpackSolver(AbstractSolver):
         self._ctx["umfpack"].free_numeric()
 
 
+class GPUSolver(AbstractSolver):
+    _ctx: dict[Any] = {}
+
+    def __init__(self, **options):
+        import cupy as cp
+        from cupyx.scipy.sparse import csr_matrix
+        from cupyx.scipy.sparse.linalg import cg
+
+        self._ctx["cg"] = partial(cg, **options)
+        self._ctx["ascp"] = cp.array
+        self._ctx["asnp"] = cp.asnumpy
+        self._ctx["ascps"] = csr_matrix
+
+    def factor(self, m: csc_matrix) -> None:
+        self._ctx["m"] = self._ctx["ascps"](m)
+
+    def solve(self, rhs: NDArray, transpose: bool = False) -> NDArray:
+        m = self._ctx["m"].T if transpose else self._ctx["m"]
+        b = self._ctx["ascp"](rhs)
+        x = self._ctx["cg"](m, b)[0]
+        return self._ctx["asnp"](x)
+
+    def clear(self) -> None:
+        self._ctx.pop("m", None)
+
+
 scipy_solver = SciPySolver(
     diag_pivot_thresh=0.1,
     permc_spec="MMD_AT_PLUS_A",
@@ -132,6 +158,11 @@ try:
 except ImportError:
     warnings.warn("scikit-umfpack not found, umfpack_solver unavailable")
 
+try:
+    gpu_solver = GPUSolver(tol=1e-12)
+except ImportError:
+    warnings.warn("cupy not found, gpu_solver unavailable")
+
 
 def get_solver(solver):
     match solver:
@@ -143,5 +174,7 @@ def get_solver(solver):
             return cholesky_solver
         case "umfpack":
             return umfpack_solver
+        case "gpu":
+            return gpu_solver
         case _:
             raise ValueError(f"Invalid solver: {solver}")
