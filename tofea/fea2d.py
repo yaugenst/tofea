@@ -9,14 +9,13 @@ from tofea.primitives import solve_coo
 
 
 class FEA2D:
-    def __init__(self, fixed: NDArray[np.bool_]) -> None:
+    def __init__(self, fixed: NDArray[np.bool_], solver: str = "scipy") -> None:
         nx, ny = fixed.shape[:2]
         dofs = np.arange(fixed.size, dtype=np.uint32).reshape(fixed.shape)
         self.out_shape = (nx - 1, ny - 1)
         self.fixdofs = dofs[fixed].ravel()
         self.freedofs = dofs[~fixed].ravel()
-        self._u = np.zeros(dofs.size)
-        self._c = np.zeros(self.out_shape)
+        self.solver = solver
 
     @cached_property
     def index_map(self) -> NDArray[np.uint32]:
@@ -53,7 +52,7 @@ class FEA2D:
 
     def __call__(self, x: NDArray, b: NDArray) -> float:
         data, indices = self.global_mat(x)
-        u_nz = solve_coo(data, indices, b.ravel()[self.freedofs])
+        u_nz = solve_coo(data, indices, b.ravel()[self.freedofs], self.solver)
         u = anp.concatenate([u_nz, np.zeros(len(self.fixdofs))])[self.index_map]
 
         dofmap = np.reshape(self.e2sdofmap.T, (-1, *self.out_shape))
