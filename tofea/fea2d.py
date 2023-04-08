@@ -27,11 +27,9 @@ class FEA2D:
     @cached_property
     def e2sdofmap(self) -> NDArray[np.uint32]:
         nx, ny = self.out_shape
-        idxs = np.arange(nx * ny, dtype=np.uint32)
-        return np.add(
-            self.dofmap[None],
-            (self.dof_dim * (idxs % ny + idxs // ny * (ny + 1)))[:, None],
-        )
+        x, y = np.unravel_index(np.arange(nx * ny), (nx, ny))
+        idxs = self.dof_dim * (y + x * (ny + 1))
+        return np.add(self.dofmap[None], idxs[:, None].astype(np.uint32))
 
     @cached_property
     def keep_indices(
