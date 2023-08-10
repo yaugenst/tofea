@@ -22,6 +22,7 @@ mkl = ["pyMKL"]
 cholmod = ["scikit-sparse"]
 umfpack = ["scikit-umfpack"]
 gpu = ["cupy"]
+examples = ["nlopt", "matplotlib", "pyvista"]
 
 [project.urls]
 Source = "https://github.com/mrbaozi/tofea"
