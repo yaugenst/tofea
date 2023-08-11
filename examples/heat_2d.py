@@ -9,7 +9,7 @@ from tofea.fea2d import FEA2D_T
 from tofea.topopt_helpers import simp_parametrization
 
 max_its = 100
-volfrac = 0.4
+volfrac = 0.5
 sigma = 0.5
 shape = (100, 100)
 nelx, nely = shape
@@ -63,8 +63,8 @@ def nlopt_obj(x, gd):
     return c
 
 
-opt = nlopt.opt(nlopt.LD_MMA, x0.size)
-opt.add_inequality_constraint(volume_constraint, 1e-6)
+opt = nlopt.opt(nlopt.LD_CCSAQ, x0.size)
+opt.add_inequality_constraint(volume_constraint, 1e-3)
 opt.set_min_objective(nlopt_obj)
 opt.set_lower_bounds(0)
 opt.set_upper_bounds(1)
