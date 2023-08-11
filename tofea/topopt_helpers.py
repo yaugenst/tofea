@@ -15,11 +15,12 @@ def sigmoid_projection(x, a, b=0.5):
     return num / denom
 
 
-def sigmoid_parametrization(shape, sigma, alpha, beta=0.5, flat=False):
+def sigmoid_parametrization(shape, sigma, vmin, vmax, alpha=20, beta=0.5, flat=False):
     def _parametrization(x):
         x = np.reshape(x, shape)
         x = gaussian_filter(x, sigma)
         x = sigmoid_projection(x, alpha, beta)
+        x = vmin + (vmax - vmin) * x
         return x.ravel() if flat else x
 
     return _parametrization
