@@ -7,13 +7,13 @@ from scipy.sparse.linalg import spsolve
 from tofea.primitives import solve_coo
 
 
-@pytest.fixture
+@pytest.fixture()
 def rng():
     seed = 36523525
     return np.random.default_rng(seed)
 
 
-@pytest.mark.parametrize("solver", ["scipy", "pardiso", "cholesky", "umfpack", "gpu"])
+@pytest.mark.parametrize("solver", ["scipy"])
 @pytest.mark.parametrize("n", [10, 11])
 def test_solve_coo(rng, solver, n):
     m = rng.random((n, n))

@@ -6,28 +6,14 @@ from scipy.sparse import coo_matrix
 from tofea.primitives import solve_coo
 
 
-@pytest.fixture
+@pytest.fixture()
 def rng():
     seed = 36523525
     return np.random.default_rng(seed)
 
 
 @pytest.mark.parametrize("n", [10, 11])
-@pytest.mark.parametrize(
-    "solver",
-    [
-        "scipy",
-        "pardiso",
-        pytest.param(
-            "cholesky",
-            marks=pytest.mark.xfail(
-                reason="Cholesky entries grads are wrong currently."
-            ),
-        ),
-        "umfpack",
-        "gpu",
-    ],
-)
+@pytest.mark.parametrize("solver", ["scipy"])
 @pytest.mark.parametrize("mode", ["fwd", "rev"])
 def test_solve_coo_entries_grad(rng, n, solver, mode):
     m = rng.random((n, n))
@@ -41,7 +27,7 @@ def test_solve_coo_entries_grad(rng, n, solver, mode):
 
 
 @pytest.mark.parametrize("n", [10, 11])
-@pytest.mark.parametrize("solver", ["scipy", "pardiso", "cholesky", "umfpack", "gpu"])
+@pytest.mark.parametrize("solver", ["scipy"])
 @pytest.mark.parametrize("mode", ["fwd", "rev"])
 def test_solve_coo_b_grad(rng, n, solver, mode):
     m = rng.random((n, n))

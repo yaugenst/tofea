@@ -13,16 +13,26 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dynamic = ["version"]
-requires-python = ">=3.10"
+requires-python = ">=3.10,<=3.12"
 dependencies = ["numpy", "scipy", "sympy", "autograd"]
 
 [project.optional-dependencies]
 test = ["pytest"]
-mkl = ["pyMKL"]
-cholmod = ["scikit-sparse"]
-umfpack = ["scikit-umfpack"]
-gpu = ["cupy"]
 examples = ["nlopt", "matplotlib", "pyvista"]
+dev = ["ruff", "mypy"]
 
 [project.urls]
 Source = "https://github.com/mrbaozi/tofea"
+
+[tool.ruff]
+select = ["E", "W", "F", "B", "I", "UP", "C4", "NPY", "PT", "SIM", "ARG", "PERF", "PTH"]
+fixable = ["ALL"]
+ignore = ["F821"]
+unfixable = ["F401", "F841"]
+line-length = 88
+target-version = "py310"
+
+[tool.mypy]
+mypy_strict = true
+python_version = "3.10"
+ignore_missing_imports = true
