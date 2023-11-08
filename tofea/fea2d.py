@@ -4,18 +4,20 @@ import autograd.numpy as anp
 import numpy as np
 from numpy.typing import NDArray
 
+from tofea import DEFAULT_SOLVER
 from tofea.elements import Q4Element_K, Q4Element_T
 from tofea.primitives import solve_coo
+from tofea.solvers import get_solver
 
 
 class FEA2D:
-    def __init__(self, fixed: NDArray[np.bool_], solver: str = "scipy") -> None:
+    def __init__(self, fixed: NDArray[np.bool_], solver: str = DEFAULT_SOLVER) -> None:
         nx, ny = fixed.shape[:2]
         dofs = np.arange(fixed.size, dtype=np.uint32).reshape(fixed.shape)
         self.out_shape = (nx - 1, ny - 1)
         self.fixdofs = dofs[fixed].ravel()
         self.freedofs = dofs[~fixed].ravel()
-        self.solver = solver
+        self.solver = get_solver(solver)
 
     @cached_property
     def index_map(self) -> NDArray[np.uint32]:
