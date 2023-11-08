@@ -32,8 +32,8 @@ def objective(x):
     xp = np.pad(x, (0, 1), mode="constant", constant_values=emin)
     xp = (xp - emin) / (emax - emin)
     body = 1e-3 * np.stack([np.zeros_like(xp), xp], axis=-1)
-    x = fem(x, load + body)
-    return x
+    x = fem.compliance(x, load + body)
+    return np.sum(x)
 
 
 def volume(x):

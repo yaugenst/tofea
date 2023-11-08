@@ -28,8 +28,8 @@ x0 = np.full(shape, volfrac)
 
 def objective(x):
     x = parametrization(x)
-    x = fem(x, load)
-    return x
+    x = fem.temperature(x, load)
+    return np.sum(x)
 
 
 def volume(x):
