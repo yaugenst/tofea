@@ -18,7 +18,7 @@ dependencies = ["numpy", "scipy", "sympy", "autograd"]
 
 [project.optional-dependencies]
 test = ["pytest"]
-examples = ["nlopt", "matplotlib", "pyvista"]
+examples = ["nlopt", "matplotlib"]
 dev = ["ruff", "mypy"]
 
 [project.urls]
