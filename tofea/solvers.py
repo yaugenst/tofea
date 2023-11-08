@@ -1,17 +1,14 @@
-import warnings
 from abc import ABC, abstractmethod
 from functools import partial
-from typing import Any
 
 from numpy.typing import NDArray
-from scipy.sparse import csc_matrix, csr_matrix
+from scipy.sparse import csc_matrix
+from scipy.sparse.linalg import splu
 
 
-class AbstractSolver(ABC):
-    _ctx: dict[int, Any] = {}
-
+class Solver(ABC):
     @abstractmethod
-    def factor(self, m: csc_matrix | csr_matrix) -> None:
+    def factor(self, m: csc_matrix) -> None:
         ...
 
     @abstractmethod
@@ -23,10 +20,10 @@ class AbstractSolver(ABC):
         ...
 
 
-class SciPySolver(AbstractSolver):
-    def __init__(self, **options):
-        from scipy.sparse.linalg import splu
+class SuperLU(Solver):
+    _ctx: dict = {}
 
+    def __init__(self, **options):
         self._ctx["splu"] = partial(splu, **options)
 
     def factor(self, m: csc_matrix) -> None:
@@ -39,12 +36,13 @@ class SciPySolver(AbstractSolver):
         self._ctx.pop("factorization", None)
 
 
-scipy_solver = SciPySolver(
-    diag_pivot_thresh=0.1,
-    permc_spec="MMD_AT_PLUS_A",
-    options={"SymmetricMode": True},
-)
-
-
-def get_solver(solver):
-    return scipy_solver
+def get_solver(solver: str) -> Solver:
+    match solver:
+        case "SuperLU":
+            return SuperLU(
+                diag_pivot_thresh=0.1,
+                permc_spec="MMD_AT_PLUS_A",
+                options={"SymmetricMode": True},
+            )
+        case _:
+            raise ValueError(f"Invalid solver: {solver}")
