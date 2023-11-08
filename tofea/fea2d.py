@@ -50,15 +50,11 @@ class FEA2D:
         keep, indices = self.keep_indices
         return x[keep], indices
 
-    def __call__(self, x: NDArray, b: NDArray) -> float:
+    def solve(self, x: NDArray, b: NDArray) -> NDArray:
         data, indices = self.global_mat(x)
         u_nz = solve_coo(data, indices, b.ravel()[self.freedofs], self.solver)
         u = anp.concatenate([u_nz, np.zeros(len(self.fixdofs))])[self.index_map]
-
-        dofmap = np.reshape(self.e2sdofmap.T, (-1, *self.out_shape))
-        c = anp.einsum("ixy,ij,jxy->xy", u[dofmap], self.element, u[dofmap])
-
-        return anp.sum(c)
+        return u
 
 
 class FEA2D_K(FEA2D):
@@ -75,6 +71,17 @@ class FEA2D_K(FEA2D):
         a = b + 2
         return np.r_[2, 3, a, b, 0, 1].astype(np.uint32)
 
+    def displacement(self, x: NDArray, b: NDArray) -> NDArray:
+        return self.solve(x, b)
+
+    def compliance(self, x: NDArray, b: NDArray) -> NDArray:
+        displacement = self.displacement(x, b)
+        dofmap = np.reshape(self.e2sdofmap.T, (-1, *self.out_shape))
+        c = anp.einsum(
+            "ixy,ij,jxy->xy", displacement[dofmap], self.element, displacement[dofmap]
+        )
+        return c
+
 
 class FEA2D_T(FEA2D):
     dof_dim: int = 1
@@ -87,3 +94,6 @@ class FEA2D_T(FEA2D):
     def dofmap(self) -> NDArray[np.uint32]:
         _, nely = self.out_shape
         return np.r_[1, (nely + 2), (nely + 1), 0].astype(np.uint32)
+
+    def temperature(self, x: NDArray, b: NDArray) -> NDArray:
+        return self.solve(x, b)
