@@ -17,9 +17,10 @@ requires-python = ">=3.10,<=3.12"
 dependencies = ["numpy", "scipy", "sympy", "autograd"]
 
 [project.optional-dependencies]
-test = ["pytest"]
+tests = ["pytest", "pytest-cov"]
 examples = ["nlopt", "matplotlib"]
-dev = ["ruff", "mypy"]
+all = ["tofea[tests,examples]"]
+dev = ["tofea[all]", "ruff", "mypy"]
 
 [project.urls]
 Source = "https://github.com/mrbaozi/tofea"
