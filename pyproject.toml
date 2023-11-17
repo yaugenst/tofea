@@ -20,7 +20,7 @@ dependencies = ["numpy", "scipy", "sympy", "autograd"]
 tests = ["pytest", "pytest-cov"]
 examples = ["nlopt", "matplotlib"]
 all = ["tofea[tests,examples]"]
-dev = ["tofea[all]", "ruff", "mypy"]
+dev = ["tofea[all]", "ruff", "mypy", "pre-commit"]
 
 [project.urls]
 Source = "https://github.com/mrbaozi/tofea"
