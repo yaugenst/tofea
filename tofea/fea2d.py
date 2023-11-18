@@ -74,13 +74,12 @@ class FEA2D_K(FEA2D):
     def displacement(self, x: NDArray, b: NDArray) -> NDArray:
         return self.solve(x, b)
 
-    def compliance(self, x: NDArray, b: NDArray) -> NDArray:
-        displacement = self.displacement(x, b)
+    def compliance(self, x: NDArray, displacement: NDArray) -> NDArray:
         dofmap = np.reshape(self.e2sdofmap.T, (-1, *self.out_shape))
         c = anp.einsum(
             "ixy,ij,jxy->xy", displacement[dofmap], self.element, displacement[dofmap]
         )
-        return c
+        return anp.sum(x * c)
 
 
 class FEA2D_T(FEA2D):
