@@ -31,7 +31,7 @@ jobs:
         python -m pip install .[dev]
 
     - name: Test with pytest
-      run: pytest
+      run: pytest --cov tofea
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
