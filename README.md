@@ -1,5 +1,7 @@
 # TOFEA
 
+[![Tests](https://github.com/yaugenst/tofea/actions/workflows/run_tests.yml/badge.svg)](https://github.com/yaugenst/tofea/actions/workflows/run_tests.yml)
+
 Simple [autograd](https://github.com/HIPS/autograd)-differentiable finite element analysis for heat conductivity and compliance problems.
 
 ## Installation
