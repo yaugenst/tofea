@@ -6,8 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build-and-test:
-    name: Test on ${{ matrix.platform }}
+  build:
     runs-on: ${{ matrix.platform }}
     strategy:
       fail-fast: false
@@ -31,6 +30,7 @@ jobs:
         else
           echo "dir=~/.cache/pip" >> $GITHUB_OUTPUT
         fi
+      shell: bash
 
     - name: Cache pip dependencies
       uses: actions/cache@v3
