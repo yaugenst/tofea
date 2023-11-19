@@ -22,7 +22,23 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-        cache: pip
+
+    - name: Set pip cache directory
+      id: pip-cache
+      run: |
+        if [[ $RUNNER_OS == 'Windows' ]]; then
+          echo "::set-output name=dir::C:\\Users\\runneradmin\\AppData\\Local\\pip\\Cache"
+        else
+          echo "::set-output name=dir::~/.cache/pip"
+        fi
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.pip-cache.outputs.dir }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - name: Install dependencies
       run: |
