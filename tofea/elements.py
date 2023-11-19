@@ -1,6 +1,7 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import cached_property
+from typing import Any
 
 import numpy as np
 import sympy
@@ -20,7 +21,7 @@ class Element:
         rule: Iterable[int],
         shape_funcs: Iterable[sympy.Expr],
         clist: Iterable[sympy.Symbol],
-    ) -> tuple[sympy.Expr]:
+    ) -> tuple[Any, ...]:
         shape_list = np.concatenate([x * np.asarray(rule) for x in shape_funcs])
         return tuple(map(sympy.diff, shape_list, clist))
 
