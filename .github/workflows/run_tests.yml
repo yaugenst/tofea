@@ -27,9 +27,9 @@ jobs:
       id: pip-cache
       run: |
         if [[ $RUNNER_OS == 'Windows' ]]; then
-          echo "::set-output name=dir::C:\\Users\\runneradmin\\AppData\\Local\\pip\\Cache"
+          echo "dir=C:\\Users\\runneradmin\\AppData\\Local\\pip\\Cache" >> $GITHUB_OUTPUT
         else
-          echo "::set-output name=dir::~/.cache/pip"
+          echo "dir=~/.cache/pip" >> $GITHUB_OUTPUT
         fi
 
     - name: Cache pip dependencies
@@ -37,8 +37,7 @@ jobs:
       with:
         path: ${{ steps.pip-cache.outputs.dir }}
         key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+        restore-keys: ${{ runner.os }}-pip-
 
     - name: Install dependencies
       run: |
