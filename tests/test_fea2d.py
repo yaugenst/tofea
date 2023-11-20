@@ -16,8 +16,8 @@ class TestFEA2DK:
     def test_dofs(self, fea2d_k_instance):
         dofs = fea2d_k_instance.dofs
         assert isinstance(dofs, np.ndarray)
-        assert dofs.shape == (5, 5, 2)
-        assert np.all(dofs == np.arange(50).reshape(5, 5, 2))
+        assert dofs.shape == (50,)
+        assert np.all(dofs == np.arange(50))
 
     def test_fixdofs(self, fea2d_k_instance):
         fixdofs = fea2d_k_instance.fixdofs
@@ -42,8 +42,8 @@ class TestFEA2DT:
     def test_dofs(self, fea2d_t_instance):
         dofs = fea2d_t_instance.dofs
         assert isinstance(dofs, np.ndarray)
-        assert dofs.shape == (5, 5)
-        assert np.all(dofs == np.arange(25).reshape(5, 5))
+        assert dofs.shape == (25,)
+        assert np.all(dofs == np.arange(25))
 
     def test_fixdofs(self, fea2d_t_instance):
         fixdofs = fea2d_t_instance.fixdofs
