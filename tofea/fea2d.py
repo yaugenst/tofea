@@ -41,15 +41,15 @@ class FEA2D(ABC):
 
     @cached_property
     def dofs(self) -> NDArray[np.uint32]:
-        return np.arange(self.fixed.size, dtype=np.uint32).reshape(self.fixed.shape)
+        return np.arange(self.fixed.size, dtype=np.uint32)
 
     @cached_property
     def fixdofs(self) -> NDArray[np.uint32]:
-        return self.dofs[self.fixed].ravel()
+        return self.dofs[self.fixed.ravel()]
 
     @cached_property
     def freedofs(self) -> NDArray[np.uint32]:
-        return self.dofs[~self.fixed].ravel()
+        return self.dofs[~self.fixed.ravel()]
 
     @cached_property
     def _solver(self) -> Solver:
@@ -58,8 +58,8 @@ class FEA2D(ABC):
     @cached_property
     def index_map(self) -> NDArray[np.uint32]:
         indices = np.concatenate([self.freedofs, self.fixdofs])
-        imap = np.zeros(len(indices), dtype=np.uint32)
-        imap[indices] = np.arange(len(indices), dtype=np.uint32)
+        imap = np.zeros_like(self.dofs)
+        imap[indices] = self.dofs
         return imap
 
     @cached_property
