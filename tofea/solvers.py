@@ -24,6 +24,7 @@ class SuperLU(Solver):
     _ctx: dict = {}
 
     def __init__(self, **options):
+        self.options = options
         self._ctx["splu"] = partial(splu, **options)
 
     def factor(self, m: csc_matrix) -> None:

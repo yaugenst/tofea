@@ -1,41 +1,37 @@
-from autograd.extend import defjvp, defvjp, primitive
+import jax
+import jax.numpy as jnp
 from scipy.sparse import coo_matrix
 
+from tofea import DEFAULT_SOLVER
+from tofea.solvers import get_solver
 
-@primitive
-def solve_coo(entries, indices, rhs, solver):
+solver = get_solver(DEFAULT_SOLVER)
+
+
+def _solve_coo(entries, indices, rhs):
     a = coo_matrix((entries, indices)).tocsc()
-    solver.clear()
     solver.factor(a)
     return solver.solve(rhs)
 
 
-def solve_coo_entries_jvp(g, x, entries, indices, rhs, solver):  # noqa: ARG001
-    a = coo_matrix((g, indices)).tocsc()
-    return solver.solve(-(a @ x))
+@jax.custom_vjp
+def solve_coo(entries, indices, rhs):
+    result_shape_dtype = jax.ShapeDtypeStruct(
+        shape=jnp.broadcast_shapes(rhs.shape), dtype=entries.dtype
+    )
+    return jax.pure_callback(_solve_coo, result_shape_dtype, entries, indices, rhs)
 
 
-def solve_coo_b_jvp(g, x, entries, indices, rhs, solver):  # noqa: ARG001
-    return solver.solve(g)
+def _solve_coo_fwd(entries, indices, rhs):
+    x = solve_coo(entries, indices, rhs)
+    return x, (x, entries, indices, rhs)
 
 
-defjvp(solve_coo, solve_coo_entries_jvp, None, solve_coo_b_jvp)
+def _solve_coo_bwd(res, g):
+    ans, entries, indices, rhs = res
+    x = solve_coo(entries, indices, g)
+    i, j = indices
+    return -x[i] * ans[j], None, x
 
 
-def solve_coo_entries_vjp(ans, entries, indices, rhs, solver):  # noqa: ARG001
-    def vjp(g):
-        x = solver.solve(g, transpose=True)
-        i, j = indices
-        return -x[i] * ans[j]
-
-    return vjp
-
-
-def solve_coo_b_vjp(ans, entries, indices, rhs, solver):  # noqa: ARG001
-    def vjp(g):
-        return solver.solve(g, transpose=True)
-
-    return vjp
-
-
-defvjp(solve_coo, solve_coo_entries_vjp, None, solve_coo_b_vjp)
+solve_coo.defvjp(_solve_coo_fwd, _solve_coo_bwd)

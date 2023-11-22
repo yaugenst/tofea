@@ -1,5 +1,5 @@
-import numpy as np
 import pytest
+from jax import Array
 
 from tofea.elements import Q4Element_K, Q4Element_T
 
@@ -11,7 +11,7 @@ class TestQ4ElementK:
 
     def test_element(self, q4element_k_instance):
         element = q4element_k_instance.element
-        assert isinstance(element, np.ndarray)
+        assert isinstance(element, Array)
         assert element.shape == (8, 8)
 
 
@@ -22,5 +22,5 @@ class TestQ4ElementT:
 
     def test_element(self, q4element_t_instance):
         element = q4element_t_instance.element
-        assert isinstance(element, np.ndarray)
+        assert isinstance(element, Array)
         assert element.shape == (4, 4)

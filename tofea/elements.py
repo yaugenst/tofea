@@ -3,9 +3,10 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import Any
 
+import jax.numpy as jnp
 import numpy as np
 import sympy
-from numpy.typing import NDArray
+from jax import Array
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -48,7 +49,7 @@ class Q4Element_K(Q4Element):
     nu: float = 1 / 3
 
     @cached_property
-    def element(self) -> NDArray:
+    def element(self) -> Array:
         a, b, x, y = self.symbols
         E, nu = sympy.symbols("E nu", real=True)
 
@@ -71,7 +72,7 @@ class Q4Element_K(Q4Element):
             dtype=self.dtype,
         )
         K[np.abs(K) < self.eps] = 0
-        return K
+        return jnp.asarray(K)
 
 
 @dataclass(frozen=True, slots=True)
@@ -79,7 +80,7 @@ class Q4Element_T(Q4Element):
     k: float = 1.0
 
     @cached_property
-    def element(self) -> NDArray:
+    def element(self) -> Array:
         a, b, x, y = self.symbols
         k = sympy.symbols("k", real=True)
 
@@ -96,4 +97,4 @@ class Q4Element_T(Q4Element):
         K = dK.integrate((x, -a, a), (y, -b, b))
         K = np.array(K.subs({a: self.dx, b: self.dy, k: self.k}), dtype=self.dtype)
         K[np.abs(K) < self.eps] = 0
-        return K
+        return jnp.asarray(K)

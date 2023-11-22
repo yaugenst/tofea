@@ -3,7 +3,7 @@
 [![tests](https://github.com/yaugenst/tofea/actions/workflows/run_tests.yml/badge.svg)](https://github.com/yaugenst/tofea/actions/workflows/run_tests.yml)
 [![codecov](https://codecov.io/gh/yaugenst/tofea/graph/badge.svg?token=5Z2SYQ3CPM)](https://codecov.io/gh/yaugenst/tofea)
 
-Simple [autograd](https://github.com/HIPS/autograd)-differentiable finite element analysis for heat conductivity and compliance problems.
+Simple finite element analysis for heat conductivity and compliance problems written in [JAX](ttps://jax.readthedocs.io/en/latest/).
 
 ## Installation
 
