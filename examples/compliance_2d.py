@@ -13,7 +13,7 @@ from tofea.fea2d import FEA2D_K
 def simp_parametrization(shape, ks, vmin, vmax, penalty=3.0):
     xy = jnp.linspace(-1, 1, ks)
     xx, yy = jnp.meshgrid(xy, xy)
-    k = jnp.where(jnp.sqrt(xx**2 + yy**2) <= 1, 1, 0)
+    k = np.sqrt(2) - jnp.sqrt(xx**2 + yy**2)
     k /= jnp.sum(k)
 
     @jax.jit
