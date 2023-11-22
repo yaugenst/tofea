@@ -14,7 +14,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 requires-python = ">=3.10,<=3.12"
-dependencies = ["numpy", "scipy", "sympy", "jax"]
+dependencies = ["numpy", "scipy", "sympy", "jax", "jaxlib"]
 
 [project.optional-dependencies]
 tests = ["pytest", "pytest-cov"]
