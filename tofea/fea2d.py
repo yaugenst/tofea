@@ -21,18 +21,15 @@ class FEA2D(ABC):
 
     @property
     @abstractmethod
-    def dof_dim(self) -> int:
-        ...
+    def dof_dim(self) -> int: ...
 
     @property
     @abstractmethod
-    def element(self) -> NDArray:
-        ...
+    def element(self) -> NDArray: ...
 
     @property
     @abstractmethod
-    def dofmap(self) -> NDArray[np.uint32]:
-        ...
+    def dofmap(self) -> NDArray[np.uint32]: ...
 
     @property
     def shape(self) -> tuple[int, int]:
