@@ -8,16 +8,13 @@ from scipy.sparse.linalg import splu
 
 class Solver(ABC):
     @abstractmethod
-    def factor(self, m: csc_matrix) -> None:
-        ...
+    def factor(self, m: csc_matrix) -> None: ...
 
     @abstractmethod
-    def solve(self, rhs: NDArray, transpose: bool = False) -> NDArray:
-        ...
+    def solve(self, rhs: NDArray, transpose: bool = False) -> NDArray: ...
 
     @abstractmethod
-    def clear(self) -> None:
-        ...
+    def clear(self) -> None: ...
 
 
 class SuperLU(Solver):
