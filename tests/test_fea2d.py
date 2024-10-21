@@ -5,20 +5,20 @@ from autograd.test_util import check_grads
 from tofea.fea2d import FEA2D_K, FEA2D_T
 
 
-@pytest.fixture()
+@pytest.fixture
 def rng():
     seed = 36523523
     return np.random.default_rng(seed)
 
 
 class TestFEA2DK:
-    @pytest.fixture()
+    @pytest.fixture
     def fea2d_k_instance(self):
         fixed = np.zeros((5, 5, 2), dtype=bool)
         fixed[0] = 1
         return FEA2D_K(fixed)
 
-    @pytest.fixture()
+    @pytest.fixture
     def x_and_b(self, fea2d_k_instance, rng):
         x = rng.random(fea2d_k_instance.shape)
         b = rng.random(fea2d_k_instance.fixed.shape)
@@ -68,13 +68,13 @@ class TestFEA2DK:
 
 
 class TestFEA2DT:
-    @pytest.fixture()
+    @pytest.fixture
     def fea2d_t_instance(self):
         fixed = np.zeros((5, 5), dtype=bool)
         fixed[0, 0] = 1
         return FEA2D_T(fixed)
 
-    @pytest.fixture()
+    @pytest.fixture
     def x_and_b(self, fea2d_t_instance, rng):
         x = rng.random(fea2d_t_instance.shape)
         b = rng.random(fea2d_t_instance.fixed.shape)

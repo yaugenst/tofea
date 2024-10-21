@@ -8,7 +8,7 @@ from tofea.primitives import solve_coo
 from tofea.solvers import get_solver
 
 
-@pytest.fixture()
+@pytest.fixture
 def rng():
     seed = 36523525
     return np.random.default_rng(seed)
