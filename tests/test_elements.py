@@ -5,7 +5,7 @@ from tofea.elements import Q4Element_K, Q4Element_T
 
 
 class TestQ4ElementK:
-    @pytest.fixture()
+    @pytest.fixture
     def q4element_k_instance(self):
         return Q4Element_K(e=1.0, nu=1 / 3, dx=0.5, dy=0.5)
 
@@ -16,7 +16,7 @@ class TestQ4ElementK:
 
 
 class TestQ4ElementT:
-    @pytest.fixture()
+    @pytest.fixture
     def q4element_t_instance(self):
         return Q4Element_T(k=1.0, dx=0.5, dy=0.5)
 
