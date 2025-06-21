@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from functools import partial
+from typing import Any
 
 from numpy.typing import NDArray
 from scipy.sparse import csc_matrix
@@ -24,9 +25,10 @@ class Solver(ABC):
 class SuperLU(Solver):
     """`scipy.sparse.linalg.splu` wrapper."""
 
-    def __init__(self, **options):
+    def __init__(self, **options: float | int | bool | str) -> None:
+        """Create a new ``SuperLU`` solver instance."""
         # store solver-specific context on the instance to avoid cross-talk
-        self._ctx: dict = {"splu": partial(splu, **options)}
+        self._ctx: dict[str, Any] = {"splu": partial(splu, **options)}
 
     def factor(self, m: csc_matrix) -> None:
         """Compute the factorization of ``m``."""
