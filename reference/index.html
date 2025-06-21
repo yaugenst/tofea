@@ -366,30 +366,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="element">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element_K.element--returns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Returns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element_K.element--examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -413,30 +389,6 @@
       element
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="element">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element_T.element--returns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Returns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element_T.element--examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -658,39 +610,6 @@
       solve_coo
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="solve_coo">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tofea.primitives.solve_coo--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tofea.primitives.solve_coo--returns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Returns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tofea.primitives.solve_coo--examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -910,30 +829,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="element">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element_K.element--returns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Returns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element_K.element--examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -957,30 +852,6 @@
       element
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="element">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element_T.element--returns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Returns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element_T.element--examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1203,39 +1074,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="solve_coo">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tofea.primitives.solve_coo--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tofea.primitives.solve_coo--returns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Returns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tofea.primitives.solve_coo--examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1363,6 +1201,10 @@
 
 
 <h1 id="api-reference">API Reference</h1>
+<p>This section contains the automatically generated API reference. Each module is
+documented with <a href="https://mkdocstrings.github.io/"><code>mkdocstrings</code></a> and the
+examples included in the docstrings are executed as doctests during continuous
+integration to ensure they remain correct.</p>
 
 
 <div class="doc doc-object doc-module">
@@ -1869,19 +1711,36 @@
 <p>The matrix is computed symbolically and evaluated for the instance
 parameters.  Small values below <code>eps</code> are zeroed out to keep the
 matrix well conditioned.</p>
-<h5 id="tofea.elements.Q4Element_K.element--returns">Returns</h5>
-<p>numpy.ndarray
-    Stiffness matrix of shape <code>(8, 8)</code>.</p>
-<h5 id="tofea.elements.Q4Element_K.element--examples">Examples</h5>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>from tofea.elements import Q4Element_K
-Q4Element_K().element.shape
-(8, 8)</p>
-</blockquote>
-</blockquote>
-</blockquote>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Stiffness matrix of shape <code>(8, 8)</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">tofea.elements</span><span class="w"> </span><span class="kn">import</span> <span class="n">Q4Element_K</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Q4Element_K</span><span class="p">()</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(8, 8)</span>
+</code></pre></div>
 
     </div>
 
@@ -2040,19 +1899,36 @@ Q4Element_K().element.shape
     <div class="doc doc-contents ">
 
         <p>Return the 4x4 conductivity matrix for the element.</p>
-<h5 id="tofea.elements.Q4Element_T.element--returns">Returns</h5>
-<p>numpy.ndarray
-    Conductivity matrix of shape <code>(4, 4)</code>.</p>
-<h5 id="tofea.elements.Q4Element_T.element--examples">Examples</h5>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>from tofea.elements import Q4Element_T
-Q4Element_T().element.shape
-(4, 4)</p>
-</blockquote>
-</blockquote>
-</blockquote>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Conductivity matrix of shape <code>(4, 4)</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">tofea.elements</span><span class="w"> </span><span class="kn">import</span> <span class="n">Q4Element_T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Q4Element_T</span><span class="p">()</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(4, 4)</span>
+</code></pre></div>
 
     </div>
 
@@ -2125,6 +2001,91 @@ Q4Element_T().element.shape
 
         <p>Abstract base class for 2D finite element models.</p>
 
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>fixed</code>
+            </td>
+            <td>
+                  <code><span title="numpy.typing.NDArray">NDArray</span>[<span title="numpy.bool_">bool_</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Boolean mask indicating which degrees of freedom are fixed.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>solver</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Name of the backend solver to use.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="tofea.DEFAULT_SOLVER">DEFAULT_SOLVER</span></code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>dx</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Element dimensions in <code>x</code> and <code>y</code> direction.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.5</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>dy</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Element dimensions in <code>x</code> and <code>y</code> direction.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.5</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Subclasses must provide the element matrix and a mapping from element
+degrees of freedom to system degrees of freedom.</p>
+</details>
 
 
 
@@ -2230,9 +2191,39 @@ Q4Element_T().element.shape
 <span class="normal">111</span>
 <span class="normal">112</span>
 <span class="normal">113</span>
-<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FEA2D</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for 2D finite element models.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for 2D finite element models.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fixed</span>
+<span class="sd">        Boolean mask indicating which degrees of freedom are fixed.</span>
+<span class="sd">    solver</span>
+<span class="sd">        Name of the backend solver to use.</span>
+<span class="sd">    dx, dy</span>
+<span class="sd">        Element dimensions in ``x`` and ``y`` direction.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Subclasses must provide the element matrix and a mapping from element</span>
+<span class="sd">    degrees of freedom to system degrees of freedom.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">fixed</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">]</span>
     <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_SOLVER</span>
@@ -2519,13 +2510,13 @@ Q4Element_T().element.shape
 
             <details class="quote">
               <summary>Source code in <code>tofea/fea2d.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">global_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">global_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Assemble global matrix from element data.&quot;&quot;&quot;</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
@@ -2554,13 +2545,13 @@ Q4Element_T().element.shape
 
             <details class="quote">
               <summary>Source code in <code>tofea/fea2d.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve ``K(x) u = b`` for ``u``.&quot;&quot;&quot;</span>
 
     <span class="n">data</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_mat</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -2607,6 +2598,17 @@ Q4Element_T().element.shape
 
 
         <p>Finite element model for compliance problems.</p>
+<p>This model solves small deformation elasticity problems using bilinear
+quadrilateral elements.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fem</span> <span class="o">=</span> <span class="n">FEA2D_K</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fem</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(8, 8)</span>
+</code></pre></div>
 
 
 
@@ -2616,22 +2618,7 @@ Q4Element_T().element.shape
 
               <details class="quote">
                 <summary>Source code in <code>tofea/fea2d.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
@@ -2647,9 +2634,48 @@ Q4Element_T().element.shape
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
-<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FEA2D_K</span><span class="p">(</span><span class="n">FEA2D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Finite element model for compliance problems.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Finite element model for compliance problems.</span>
+
+<span class="sd">    This model solves small deformation elasticity problems using bilinear</span>
+<span class="sd">    quadrilateral elements.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; fixed = np.zeros((2, 2, 2), dtype=bool)</span>
+<span class="sd">    &gt;&gt;&gt; fem = FEA2D_K(fixed)</span>
+<span class="sd">    &gt;&gt;&gt; fem.element.shape</span>
+<span class="sd">    (8, 8)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">dof_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">e</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -2756,13 +2782,13 @@ Q4Element_T().element.shape
 
             <details class="quote">
               <summary>Source code in <code>tofea/fea2d.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compliance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">displacement</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compliance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">displacement</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compliance objective for ``x`` and ``displacement``.&quot;&quot;&quot;</span>
     <span class="n">dofmap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e2sdofmap</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">anp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
@@ -2791,9 +2817,9 @@ Q4Element_T().element.shape
 
             <details class="quote">
               <summary>Source code in <code>tofea/fea2d.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">displacement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">displacement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return displacement field for density ``x`` and load ``b``.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -2838,6 +2864,15 @@ Q4Element_T().element.shape
         <p>Finite element model for heat conduction problems.</p>
 
 
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fem</span> <span class="o">=</span> <span class="n">FEA2D_T</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fem</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(4, 4)</span>
+</code></pre></div>
+
+
 
 
 
@@ -2845,29 +2880,47 @@ Q4Element_T().element.shape
 
               <details class="quote">
                 <summary>Source code in <code>tofea/fea2d.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FEA2D_T</span><span class="p">(</span><span class="n">FEA2D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Finite element model for heat conduction problems.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Finite element model for heat conduction problems.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; fixed = np.zeros((2, 2), dtype=bool)</span>
+<span class="sd">    &gt;&gt;&gt; fem = FEA2D_T(fixed)</span>
+<span class="sd">    &gt;&gt;&gt; fem.element.shape</span>
+<span class="sd">    (4, 4)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">dof_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -2963,9 +3016,9 @@ Q4Element_T().element.shape
 
             <details class="quote">
               <summary>Source code in <code>tofea/fea2d.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return temperature field for density ``x`` and load ``b``.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -3030,33 +3083,120 @@ Q4Element_T().element.shape
     <div class="doc doc-contents ">
 
         <p>Solve a sparse linear system in COO format.</p>
-<h4 id="tofea.primitives.solve_coo--parameters">Parameters</h4>
-<p>entries : array-like
-    Non-zero matrix entries.
-indices : tuple[array-like, array-like]
-    Row and column indices for <code>entries</code>.
-rhs : array-like
-    Right-hand side vector.
-solver : tofea.solvers.Solver
-    Factorization backend used to solve the system.</p>
-<h4 id="tofea.primitives.solve_coo--returns">Returns</h4>
-<p>numpy.ndarray
-    Solution vector.</p>
-<h4 id="tofea.primitives.solve_coo--examples">Examples</h4>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>import numpy as np
-from scipy.sparse import coo_matrix
-from tofea.primitives import solve_coo
-from tofea.solvers import get_solver
-m = coo_matrix([[4, 1], [1, 3]])
-b = np.array([1, 2])
-solve_coo(m.data, (m.row, m.col), b, get_solver("SuperLU"))
-array([0.09090909, 0.63636364])</p>
-</blockquote>
-</blockquote>
-</blockquote>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>entries</code>
+            </td>
+            <td>
+                  <code><span title="array">array</span> - <span title="like">like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Non-zero matrix entries.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>indices</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="array">array</span> - <span title="like">like</span>, <span title="array">array</span> - <span title="like">like</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Row and column indices for <code>entries</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>rhs</code>
+            </td>
+            <td>
+                  <code><span title="array">array</span> - <span title="like">like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Right-hand side vector.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>solver</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Solver (tofea.solvers.Solver)" href="#tofea.solvers.Solver">Solver</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Factorization backend used to solve the system.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Solution vector.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">coo_matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">tofea.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_coo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">tofea.solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_solver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">([[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solve_coo</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">row</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">col</span><span class="p">),</span> <span class="n">b</span><span class="p">,</span> <span class="n">get_solver</span><span class="p">(</span><span class="s2">&quot;SuperLU&quot;</span><span class="p">))</span>
+<span class="go">array([0.09090909, 0.63636364])</span>
+</code></pre></div>
 
 
             <details class="quote">
@@ -3556,6 +3696,46 @@ array([0.09090909, 0.63636364])</p>
         <p>Return a solver instance by name.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>solver</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Name of the solver implementation. Currently only <code>"SuperLU"</code> is
+available.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">tofea.solvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_solver</span><span class="p">,</span> <span class="n">Solver</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">get_solver</span><span class="p">(</span><span class="s2">&quot;SuperLU&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Solver</span><span class="p">)</span>
+<span class="go">True</span>
+</code></pre></div>
+
+
             <details class="quote">
               <summary>Source code in <code>tofea/solvers.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
@@ -3568,8 +3748,36 @@ array([0.09090909, 0.63636364])</p>
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_solver</span><span class="p">(</span><span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solver</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a solver instance by name.&quot;&quot;&quot;</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_solver</span><span class="p">(</span><span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solver</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a solver instance by name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver</span>
+<span class="sd">        Name of the solver implementation. Currently only ``&quot;SuperLU&quot;`` is</span>
+<span class="sd">        available.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from tofea.solvers import get_solver, Solver</span>
+<span class="sd">    &gt;&gt;&gt; s = get_solver(&quot;SuperLU&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(s, Solver)</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">match</span> <span class="n">solver</span><span class="p">:</span>
         <span class="k">case</span> <span class="s2">&quot;SuperLU&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">SuperLU</span><span class="p">(</span>
