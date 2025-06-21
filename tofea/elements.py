@@ -113,9 +113,7 @@ class Q4Element_K(Q4Element):
             ]
         )
 
-        C = (E / (1 - nu**2)) * sympy.Matrix(
-            [[1, nu, 0], [nu, 1, 0], [0, 0, (1 - nu) / 2]]
-        )
+        C = (E / (1 - nu**2)) * sympy.Matrix([[1, nu, 0], [nu, 1, 0], [0, 0, (1 - nu) / 2]])
 
         dK = B.T * C * B
         K = dK.integrate((x, -a, a), (y, -b, b))

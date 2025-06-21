@@ -24,9 +24,7 @@ def test_solve_coo_entries_grad(rng, n, solver, mode):
 
     _solver = get_solver(solver)
 
-    check_grads(
-        lambda x: solve_coo(x, (m.row, m.col), b, _solver), modes=[mode], order=1
-    )(m.data)
+    check_grads(lambda x: solve_coo(x, (m.row, m.col), b, _solver), modes=[mode], order=1)(m.data)
 
 
 @pytest.mark.parametrize("n", [10, 11])
@@ -40,6 +38,4 @@ def test_solve_coo_b_grad(rng, n, solver, mode):
 
     _solver = get_solver(solver)
 
-    check_grads(
-        lambda x: solve_coo(m.data, (m.row, m.col), x, _solver), modes=[mode], order=1
-    )(b)
+    check_grads(lambda x: solve_coo(m.data, (m.row, m.col), x, _solver), modes=[mode], order=1)(b)

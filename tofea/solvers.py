@@ -26,9 +26,7 @@ class Solver(ABC):
 class SuperLU(Solver):
     """`scipy.sparse.linalg.splu` wrapper."""
 
-    def __init__(
-        self, **options: float | int | bool | str | Mapping[str, bool]
-    ) -> None:
+    def __init__(self, **options: float | int | bool | str | Mapping[str, bool]) -> None:
         """Create a new ``SuperLU`` solver instance."""
         # store solver-specific context on the instance to avoid cross-talk
         self._ctx: dict[str, Any] = {"splu": partial(splu, **options)}
