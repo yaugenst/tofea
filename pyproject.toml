@@ -19,7 +19,6 @@ requires-python = ">=3.10,<3.14"
 dependencies = [
     "numpy>=1.26",
     "scipy>=1.11",
-    "sympy>=1.13",
     "autograd>=1.8",
 ]
 
@@ -71,4 +70,3 @@ ignore_missing_imports = true
 filterwarnings = ["ignore::DeprecationWarning"]
 addopts = "--doctest-modules"
 testpaths = ["tofea", "tests"]
-env = ["MPLBACKEND=Agg"]

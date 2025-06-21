@@ -1,11 +1,9 @@
 """Finite element primitives used by :mod:`tofea`."""
 
-from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import cached_property
 
 import numpy as np
-import sympy
 from numpy.typing import NDArray
 
 
@@ -19,60 +17,46 @@ class Element:
     eps: float = 1e-6
     dtype: type = np.float64
 
-    @staticmethod
-    def _b_entries(
-        rule: Iterable[int],
-        shape_funcs: Iterable[sympy.Expr],
-        clist: Iterable[sympy.Symbol],
-    ) -> tuple[sympy.Expr, ...]:
-        """Return derivatives of ``shape_funcs`` with respect to ``clist``.
-
-        Parameters
-        ----------
-        rule
-            Scaling applied to each shape function before differentiation.
-        shape_funcs
-            Iterable containing the shape functions.
-        clist
-            Symbols with respect to which the derivatives are taken.
-
-        Returns
-        -------
-        tuple[sympy.Expr, ...]
-            The differentiated shape functions.
-
-        Examples
-        --------
-        >>> import sympy
-        >>> x, y = sympy.symbols("x y")
-        >>> Element._b_entries([1, 0], [x * y], [x, y])
-        (y, 0)
-        """
-
-        shape_list = np.concatenate([x * np.asarray(rule) for x in shape_funcs])
-        return tuple(map(sympy.diff, shape_list, clist))
-
 
 class Q4Element(Element):
-    """Four-node quadrilateral element."""
+    """Four-node quadrilateral element.
 
-    @property
-    def symbols(self) -> tuple[sympy.Symbol, ...]:
-        """Return the symbols used to define the element."""
+    This class provides utilities shared by all quadrilateral elements
+    implemented in :mod:`tofea`, namely Gauss quadrature points and the
+    gradients of the bilinear shape functions.  Having these helpers in a
+    common base class avoids code duplication in the concrete element
+    implementations and gives this abstraction a clear purpose.
+    """
 
-        return sympy.symbols("a b x y", real=True)
+    @staticmethod
+    def gauss_points() -> list[tuple[float, float]]:
+        """Return the points for 2x2 Gauss quadrature."""
 
-    @property
-    def shape_funcs(self) -> list[sympy.Expr]:
-        """Return bilinear shape functions for a four-node element."""
+        gp = 1 / np.sqrt(3)
+        return [(-gp, -gp), (gp, -gp), (gp, gp), (-gp, gp)]
 
-        a, b, x, y = self.symbols
-        return [
-            (a - x) * (b - y) / (4 * a * b),
-            (a + x) * (b - y) / (4 * a * b),
-            (a + x) * (b + y) / (4 * a * b),
-            (a - x) * (b + y) / (4 * a * b),
-        ]
+    def grad_shape_funcs(self, xi: float, eta: float) -> tuple[NDArray, NDArray]:
+        """Return shape function gradients for local coordinates."""
+
+        dN_dxi: NDArray = np.array(
+            [
+                -0.25 * (1 - eta),
+                0.25 * (1 - eta),
+                0.25 * (1 + eta),
+                -0.25 * (1 + eta),
+            ],
+            dtype=self.dtype,
+        )
+        dN_deta: NDArray = np.array(
+            [
+                -0.25 * (1 - xi),
+                -0.25 * (1 + xi),
+                0.25 * (1 + xi),
+                0.25 * (1 - xi),
+            ],
+            dtype=self.dtype,
+        )
+        return dN_dxi, dN_deta
 
 
 @dataclass(frozen=True, slots=True)
@@ -86,9 +70,10 @@ class Q4Element_K(Q4Element):
     def element(self) -> NDArray:
         """Return the 8x8 stiffness matrix for the element.
 
-        The matrix is computed symbolically and evaluated for the instance
-        parameters.  Small values below ``eps`` are zeroed out to keep the
-        matrix well conditioned.
+        The matrix is assembled using 2x2 Gauss quadrature instead of the
+        symbolic integration previously used.  This avoids the costly SymPy
+        computations and speeds up object construction significantly while
+        maintaining numerical precision.
 
         Returns
         -------
@@ -102,25 +87,25 @@ class Q4Element_K(Q4Element):
         (8, 8)
         """
 
-        a, b, x, y = self.symbols
-        E, nu = sympy.symbols("E nu", real=True)
-
-        B = sympy.Matrix(
-            [
-                self._b_entries([1, 0], self.shape_funcs, 8 * [x]),
-                self._b_entries([0, 1], self.shape_funcs, 8 * [y]),
-                self._b_entries([1, 1], self.shape_funcs, 4 * [y, x]),
-            ]
-        )
-
-        C = (E / (1 - nu**2)) * sympy.Matrix([[1, nu, 0], [nu, 1, 0], [0, 0, (1 - nu) / 2]])
-
-        dK = B.T * C * B
-        K = dK.integrate((x, -a, a), (y, -b, b))
-        K = np.array(
-            K.subs({a: self.dx, b: self.dy, E: self.e, nu: self.nu}),
+        C: NDArray = (self.e / (1 - self.nu**2)) * np.array(
+            [[1, self.nu, 0], [self.nu, 1, 0], [0, 0, (1 - self.nu) / 2]],
             dtype=self.dtype,
         )
+
+        K: NDArray = np.zeros((8, 8), dtype=self.dtype)
+
+        for xi, eta in self.gauss_points():
+            dN_dxi, dN_deta = self.grad_shape_funcs(xi, eta)
+
+            B: NDArray = np.zeros((3, 8), dtype=self.dtype)
+            for i in range(4):
+                B[0, 2 * i] = dN_dxi[i] / self.dx
+                B[1, 2 * i + 1] = dN_deta[i] / self.dy
+                B[2, 2 * i] = dN_deta[i] / self.dy
+                B[2, 2 * i + 1] = dN_dxi[i] / self.dx
+
+            K += (B.T @ C @ B) * self.dx * self.dy
+
         K[np.abs(K) < self.eps] = 0
         return K
 
@@ -135,6 +120,10 @@ class Q4Element_T(Q4Element):
     def element(self) -> NDArray:
         """Return the 4x4 conductivity matrix for the element.
 
+        Similar to :class:`Q4Element_K`, the matrix is assembled numerically
+        using 2x2 Gauss quadrature.  This removes the dependency on SymPy for
+        runtime calculations and considerably reduces initialization time.
+
         Returns
         -------
         numpy.ndarray
@@ -147,20 +136,19 @@ class Q4Element_T(Q4Element):
         (4, 4)
         """
 
-        a, b, x, y = self.symbols
-        k = sympy.symbols("k", real=True)
+        C: NDArray = np.array([[self.k, 0], [0, self.k]], dtype=self.dtype)
 
-        B = sympy.Matrix(
-            [
-                self._b_entries([1], self.shape_funcs, 4 * [x]),
-                self._b_entries([1], self.shape_funcs, 4 * [y]),
-            ]
-        )
+        K: NDArray = np.zeros((4, 4), dtype=self.dtype)
 
-        C = sympy.Matrix([[k, 0], [0, k]])
+        for xi, eta in self.gauss_points():
+            dN_dxi, dN_deta = self.grad_shape_funcs(xi, eta)
 
-        dK = B.T * C * B
-        K = dK.integrate((x, -a, a), (y, -b, b))
-        K = np.array(K.subs({a: self.dx, b: self.dy, k: self.k}), dtype=self.dtype)
+            B: NDArray = np.zeros((2, 4), dtype=self.dtype)
+            for i in range(4):
+                B[0, i] = dN_dxi[i] / self.dx
+                B[1, i] = dN_deta[i] / self.dy
+
+            K += (B.T @ C @ B) * self.dx * self.dy
+
         K[np.abs(K) < self.eps] = 0
         return K
