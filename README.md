@@ -16,6 +16,17 @@ The package contains examples of topology optimization for 2D and 3D heat and co
 
 To run the examples, there are some additional dependencies for optimization and plotting, so install using `pip install tofea[examples]`.
 
+## Documentation
+
+The API reference is built with [MkDocs](https://www.mkdocs.org/) and
+[mkdocstrings](https://mkdocstrings.github.io/). Install the documentation
+extras and run `mkdocs serve` to preview the site locally:
+
+```bash
+pip install -e .[docs]
+mkdocs serve
+```
+
 ## Disclaimer
 
 The package is pretty bare-bones and waiting for a big refactor, which I have not gotten around to.
