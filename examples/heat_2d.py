@@ -32,17 +32,16 @@ def main():
     volfrac = 0.5
     sigma = 1.0
     shape = (100, 100)
-    nelx, nely = shape
     cmin, cmax = 1e-4, 1
 
-    fixed = np.zeros((nelx + 1, nely + 1), dtype="?")
-    load = np.zeros_like(fixed)
+    bc = BoundaryConditions(shape)
+    bc.fix_edge("top")
+    bc.apply_uniform_load_on_edge("bottom", 1.0)
+    bc.apply_uniform_load_on_edge("left", 1.0)
+    bc.apply_uniform_load_on_edge("right", 1.0)
 
-    fixed[shape[0] // 2 - 5 : shape[0] // 2 + 5, -1] = 1
-    load[:, 0] = 1
-    load[(0, -1), :] = 1
-
-    fem = FEA2D_T(fixed)
+    load = bc.load
+    fem = FEA2D_T(bc.fixed)
     parametrization = simp_parametrization(shape, sigma, cmin, cmax)
     x0 = np.full(shape, volfrac)
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 __all__ = [
     "DEFAULT_SOLVER",
     "__version__",
+    "boundary_conditions",
     "elements",
     "fea2d",
     "primitives",
