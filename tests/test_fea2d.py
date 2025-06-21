@@ -59,11 +59,13 @@ class TestFEA2DK:
             order=1,
         )(b)
 
-    def test_compliance_grads(self, fea2d_k_instance, x_and_b, rng):
-        x, _ = x_and_b
-        d = rng.random(fea2d_k_instance.dofs.shape)
-        check_grads(lambda x_: fea2d_k_instance.compliance(x_, d), modes=["fwd", "rev"], order=1)(x)
-        check_grads(lambda d_: fea2d_k_instance.compliance(x, d_), modes=["fwd", "rev"], order=1)(d)
+    def test_compliance_grads(self, fea2d_k_instance, x_and_b):
+        x, b = x_and_b
+        check_grads(
+            lambda x_: fea2d_k_instance.compliance(x_, b),
+            modes=["rev"],
+            order=1,
+        )(x)
 
 
 class TestFEA2DT:
@@ -110,6 +112,14 @@ class TestFEA2DT:
             modes=["fwd", "rev"],
             order=1,
         )(b)
+
+    def test_thermal_compliance_grads(self, fea2d_t_instance, x_and_b):
+        x, b = x_and_b
+        check_grads(
+            lambda x_: fea2d_t_instance.thermal_compliance(x_, b),
+            modes=["rev"],
+            order=1,
+        )(x)
 
 
 def test_fea2d_k_solution_matches_spsolve():

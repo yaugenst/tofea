@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 
+import autograd.numpy as anp
 import numpy as np
 from autograd.extend import defjvp, defvjp, primitive
 from numpy.typing import NDArray
@@ -116,3 +117,46 @@ def solve_coo_b_vjp(
 
 
 defvjp(solve_coo, solve_coo_entries_vjp, None, solve_coo_b_vjp)
+
+
+@primitive
+def solve_and_compute_self_adjoint_objective(
+    entries: NDArray,
+    indices: tuple[NDArray[np.int_], NDArray[np.int_]],
+    rhs: NDArray,
+    solver: Solver,
+) -> tuple[NDArray, NDArray]:
+    """Solve ``K u = b`` and return the self-adjoint objective and solution."""
+
+    u_nz = solve_coo(entries, indices, rhs, solver)
+    objective = anp.dot(u_nz, rhs)
+    return objective, u_nz
+
+
+def solve_and_compute_self_adjoint_objective_vjp(
+    ans: tuple[NDArray, NDArray],
+    entries: NDArray,  # noqa: ARG001
+    indices: tuple[NDArray[np.int_], NDArray[np.int_]],
+    rhs: NDArray,  # noqa: ARG001
+    solver: Solver,  # noqa: ARG001
+) -> Callable[[NDArray | tuple[NDArray, NDArray]], NDArray]:
+    """Reverse-mode derivative for ``solve_and_compute_self_adjoint_objective``."""
+
+    _, u_nz = ans
+
+    def vjp(g: NDArray | tuple[NDArray, NDArray]) -> NDArray:
+        if not isinstance(g, np.ndarray):
+            g = g[0]
+        i, j = indices
+        return -g * u_nz[i] * u_nz[j]
+
+    return vjp
+
+
+defvjp(
+    solve_and_compute_self_adjoint_objective,
+    solve_and_compute_self_adjoint_objective_vjp,
+    None,
+    None,
+    None,
+)

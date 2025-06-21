@@ -10,7 +10,7 @@ from numpy.typing import NDArray
 
 from tofea import DEFAULT_SOLVER
 from tofea.elements import Q4Element_K, Q4Element_T
-from tofea.primitives import solve_coo
+from tofea.primitives import solve_and_compute_self_adjoint_objective, solve_coo
 from tofea.solvers import Solver, get_solver
 
 
@@ -134,6 +134,16 @@ class FEA2D(ABC):
         u = anp.concatenate([u_nz, np.zeros(len(self.fixdofs))])[self.index_map]
         return u
 
+    def _self_adjoint_objective(self, x: NDArray, b: NDArray) -> NDArray:
+        """Internal method to compute a self-adjoint objective."""
+
+        data, indices = self.global_mat(x)
+        free_rhs = b.ravel()[self.freedofs]
+        objective, _ = solve_and_compute_self_adjoint_objective(
+            data, indices, free_rhs, self._solver
+        )
+        return objective
+
 
 @dataclass
 class FEA2D_K(FEA2D):
@@ -169,18 +179,38 @@ class FEA2D_K(FEA2D):
         return np.r_[2, 3, a, b, 0, 1].astype(np.uint32)
 
     def displacement(self, x: NDArray, b: NDArray) -> NDArray:
-        """Return displacement field for density ``x`` and load ``b``."""
+        """Return displacement field for density ``x`` and load ``b``.
+
+        This is a general-purpose method that returns the full displacement field,
+        suitable for constructing arbitrary objective functions. If your
+        objective is compliance minimization, using the ``compliance()`` method is
+        significantly more performant.
+        """
+
         return self.solve(x, b)
 
-    def compliance(self, x: NDArray, displacement: NDArray) -> NDArray:
-        """Compliance objective for ``x`` and ``displacement``."""
-        c = anp.einsum(
-            "ixy,ij,jxy->xy",
-            displacement[self.e2sdofmap_reshaped],
-            self.element,
-            displacement[self.e2sdofmap_reshaped],
-        )
-        return anp.sum(x * c)
+    def compliance(self, x: NDArray, b: NDArray) -> NDArray:
+        """Computes the compliance objective using a highly efficient self-adjoint pathway.
+
+        This method is optimized for compliance minimization and avoids a redundant
+        adjoint solve during gradient computation. For constructing arbitrary objective
+        functions based on the displacement field, use the :meth:`displacement` method
+        instead.
+
+        Parameters
+        ----------
+        x : array-like
+            Material density field.
+        b : array-like
+            Load vector.
+
+        Returns
+        -------
+        numpy.ndarray
+            The scalar compliance value.
+        """
+
+        return self._self_adjoint_objective(x, b)
 
 
 @dataclass
@@ -211,5 +241,35 @@ class FEA2D_T(FEA2D):
         return np.r_[1, (nely + 2), (nely + 1), 0].astype(np.uint32)
 
     def temperature(self, x: NDArray, b: NDArray) -> NDArray:
-        """Return temperature field for density ``x`` and load ``b``."""
+        """Return temperature field for density ``x`` and load ``b``.
+
+        This is a general-purpose method that returns the full temperature field,
+        suitable for constructing arbitrary objective functions. If your objective
+        is thermal compliance minimization, using the ``thermal_compliance()``
+        method is significantly more performant.
+        """
+
         return self.solve(x, b)
+
+    def thermal_compliance(self, x: NDArray, b: NDArray) -> NDArray:
+        """Computes the thermal compliance objective using a highly efficient self-adjoint pathway.
+
+        This method is optimized for thermal compliance minimization and avoids a
+        redundant adjoint solve during gradient computation. For constructing arbitrary
+        objective functions based on the temperature field, use the :meth:`temperature`
+        method instead.
+
+        Parameters
+        ----------
+        x : array-like
+            Material density field.
+        b : array-like
+            Heat load vector.
+
+        Returns
+        -------
+        numpy.ndarray
+            The scalar thermal compliance value.
+        """
+
+        return self._self_adjoint_objective(x, b)
