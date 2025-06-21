@@ -22,6 +22,8 @@ class FEA2D(ABC):
     ----------
     fixed
         Boolean mask indicating which degrees of freedom are fixed.
+        Shape for thermal problems is ``(nx + 1, ny + 1)`` and for
+        elasticity problems ``(nx + 1, ny + 1, 2)``.
     solver
         Name of the backend solver to use.
     dx, dy
@@ -152,11 +154,19 @@ class FEA2D_K(FEA2D):
     This model solves small deformation elasticity problems using bilinear
     quadrilateral elements.
 
+    Parameters
+    ----------
+    e : float
+        Young's modulus of the material.
+    nu : float
+        Poisson's ratio of the material.
+
     Examples
     --------
     >>> import numpy as np
-    >>> fixed = np.zeros((2, 2, 2), dtype=bool)
-    >>> fem = FEA2D_K(fixed)
+    >>> from tofea.fea2d import FEA2D_K
+    >>> fixed = np.zeros((1, 1, 2), dtype=bool)
+    >>> fem = FEA2D_K(fixed, e=210e9, nu=0.3)
     >>> fem.element.shape
     (8, 8)
     """
@@ -181,6 +191,13 @@ class FEA2D_K(FEA2D):
     def displacement(self, x: NDArray, b: NDArray) -> NDArray:
         """Return displacement field for density ``x`` and load ``b``.
 
+        Parameters
+        ----------
+        x : numpy.ndarray
+            Density field of shape ``(nx, ny)``.
+        b : numpy.ndarray
+            Load array of shape ``(nx + 1, ny + 1, 2)``.
+
         This is a general-purpose method that returns the full displacement field,
         suitable for constructing arbitrary objective functions. If your
         objective is compliance minimization, using the ``compliance()`` method is
@@ -199,10 +216,10 @@ class FEA2D_K(FEA2D):
 
         Parameters
         ----------
-        x : array-like
-            Material density field.
-        b : array-like
-            Load vector.
+        x : numpy.ndarray
+            Density field of shape ``(nx, ny)``.
+        b : numpy.ndarray
+            Load array of shape ``(nx + 1, ny + 1, 2)``.
 
         Returns
         -------
@@ -217,11 +234,17 @@ class FEA2D_K(FEA2D):
 class FEA2D_T(FEA2D):
     """Finite element model for heat conduction problems.
 
+    Parameters
+    ----------
+    k : float
+        Thermal conductivity of the material.
+
     Examples
     --------
     >>> import numpy as np
-    >>> fixed = np.zeros((2, 2), dtype=bool)
-    >>> fem = FEA2D_T(fixed)
+    >>> from tofea.fea2d import FEA2D_T
+    >>> fixed = np.zeros((1, 1), dtype=bool)
+    >>> fem = FEA2D_T(fixed, k=200.0)
     >>> fem.element.shape
     (4, 4)
     """
@@ -243,6 +266,13 @@ class FEA2D_T(FEA2D):
     def temperature(self, x: NDArray, b: NDArray) -> NDArray:
         """Return temperature field for density ``x`` and load ``b``.
 
+        Parameters
+        ----------
+        x : numpy.ndarray
+            Density field of shape ``(nx, ny)``.
+        b : numpy.ndarray
+            Heat load array of shape ``(nx + 1, ny + 1)``.
+
         This is a general-purpose method that returns the full temperature field,
         suitable for constructing arbitrary objective functions. If your objective
         is thermal compliance minimization, using the ``thermal_compliance()``
@@ -261,10 +291,10 @@ class FEA2D_T(FEA2D):
 
         Parameters
         ----------
-        x : array-like
-            Material density field.
-        b : array-like
-            Heat load vector.
+        x : numpy.ndarray
+            Density field of shape ``(nx, ny)``.
+        b : numpy.ndarray
+            Heat load array of shape ``(nx + 1, ny + 1)``.
 
         Returns
         -------

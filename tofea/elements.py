@@ -61,7 +61,15 @@ class Q4Element(Element):
 
 @dataclass(frozen=True, slots=True)
 class Q4Element_K(Q4Element):
-    """Plane stress elasticity element."""
+    """Plane stress elasticity element.
+
+    Parameters
+    ----------
+    e : float
+        Young's modulus of the material.
+    nu : float
+        Poisson's ratio of the material.
+    """
 
     e: float = 1.0
     nu: float = 1 / 3
@@ -112,7 +120,13 @@ class Q4Element_K(Q4Element):
 
 @dataclass(frozen=True, slots=True)
 class Q4Element_T(Q4Element):
-    """Heat conductivity element."""
+    """Heat conductivity element.
+
+    Parameters
+    ----------
+    k : float
+        Thermal conductivity of the material.
+    """
 
     k: float = 1.0
 
