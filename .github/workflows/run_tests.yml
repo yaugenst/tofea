@@ -46,7 +46,7 @@ jobs:
       run: mypy tofea
 
     - name: Test with pytest
-      run: pytest --cov tofea
+      run: pytest --doctest-modules --cov tofea
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
