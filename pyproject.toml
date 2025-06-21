@@ -27,7 +27,7 @@ dependencies = [
 tests = ["pytest", "pytest-cov"]
 examples = ["nlopt", "matplotlib"]
 all = ["tofea[tests,examples]"]
-docs = ["mkdocs", "mkdocstrings[python]"]
+docs = ["mkdocs", "mkdocstrings[python]", "mkdocs-material"]
 dev = ["tofea[all,docs]", "ruff", "mypy", "pre-commit"]
 
 [project.urls]
