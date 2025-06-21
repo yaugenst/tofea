@@ -1,0 +1,7 @@
+site_name: TOFEA
+repo_url: https://github.com/mrbaozi/tofea
+docs_dir: docs
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
