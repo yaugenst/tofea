@@ -53,8 +53,7 @@ def main():
     @value_and_grad
     def objective(x):
         x = parametrization(x)
-        d = fem.displacement(x, load)
-        c = fem.compliance(x, d)
+        c = fem.compliance(x, load)
         return c
 
     @value_and_grad
