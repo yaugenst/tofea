@@ -13,6 +13,7 @@ from numpy.typing import NDArray
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Element:
     """Base dataclass for finite elements."""
+
     dx: float = 0.5
     dy: float = 0.5
     dz: float = 0.5
@@ -55,6 +56,7 @@ class Element:
 
 class Q4Element(Element):
     """Four-node quadrilateral element."""
+
     @property
     def symbols(self) -> tuple[sympy.Symbol, ...]:
         """Return the symbols used to define the element."""
@@ -77,6 +79,7 @@ class Q4Element(Element):
 @dataclass(frozen=True, slots=True)
 class Q4Element_K(Q4Element):
     """Plane stress elasticity element."""
+
     e: float = 1.0
     nu: float = 1 / 3
 

@@ -10,6 +10,7 @@ from scipy.sparse.linalg import splu
 
 class Solver(ABC):
     """Abstract interface for linear solvers."""
+
     @abstractmethod
     def factor(self, m: csc_matrix) -> None: ...
 
@@ -22,6 +23,7 @@ class Solver(ABC):
 
 class SuperLU(Solver):
     """`scipy.sparse.linalg.splu` wrapper."""
+
     def __init__(self, **options):
         # store solver-specific context on the instance to avoid cross-talk
         self._ctx: dict = {"splu": partial(splu, **options)}

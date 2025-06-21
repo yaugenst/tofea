@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 """Finite element solvers for 2D problems."""
 
 from dataclasses import dataclass
@@ -17,6 +18,7 @@ from tofea.solvers import Solver, get_solver
 @dataclass
 class FEA2D(ABC):
     """Abstract base class for 2D finite element models."""
+
     fixed: NDArray[np.bool_]
     solver: str = DEFAULT_SOLVER
     dx: float = 0.5
@@ -116,6 +118,7 @@ class FEA2D(ABC):
 @dataclass
 class FEA2D_K(FEA2D):
     """Finite element model for compliance problems."""
+
     dof_dim: int = 2
     e: float = 1.0
     nu: float = 1 / 3
@@ -149,6 +152,7 @@ class FEA2D_K(FEA2D):
 @dataclass
 class FEA2D_T(FEA2D):
     """Finite element model for heat conduction problems."""
+
     dof_dim: int = 1
     k: float = 1.0
 
