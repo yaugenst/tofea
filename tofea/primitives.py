@@ -1,11 +1,21 @@
 """Autograd primitives used by the finite element routines."""
 
+from typing import Callable
+
+import numpy as np
 from autograd.extend import defjvp, defvjp, primitive
+from numpy.typing import NDArray
 from scipy.sparse import coo_matrix
+from tofea.solvers import Solver
 
 
 @primitive
-def solve_coo(entries, indices, rhs, solver):
+def solve_coo(
+    entries: NDArray,
+    indices: tuple[NDArray[np.int_], NDArray[np.int_]],
+    rhs: NDArray,
+    solver: Solver,
+) -> NDArray:
     """Solve a sparse linear system in COO format.
 
     Parameters
@@ -42,14 +52,28 @@ def solve_coo(entries, indices, rhs, solver):
     return solver.solve(rhs)
 
 
-def solve_coo_entries_jvp(g, x, entries, indices, rhs, solver):  # noqa: ARG001
+def solve_coo_entries_jvp(
+    g: NDArray,
+    x: NDArray,
+    entries: NDArray,
+    indices: tuple[NDArray[np.int_], NDArray[np.int_]],
+    rhs: NDArray,  # noqa: ARG001
+    solver: Solver,
+) -> NDArray:
     """Forward-mode derivative of :func:`solve_coo` with respect to ``entries``."""
 
     a = coo_matrix((g, indices)).tocsc()
     return solver.solve(-(a @ x))
 
 
-def solve_coo_b_jvp(g, x, entries, indices, rhs, solver):  # noqa: ARG001
+def solve_coo_b_jvp(
+    g: NDArray,
+    x: NDArray,  # noqa: ARG001
+    entries: NDArray,  # noqa: ARG001
+    indices: tuple[NDArray[np.int_], NDArray[np.int_]],  # noqa: ARG001
+    rhs: NDArray,
+    solver: Solver,
+) -> NDArray:
     """Forward-mode derivative of :func:`solve_coo` with respect to ``rhs``."""
 
     return solver.solve(g)
@@ -58,10 +82,16 @@ def solve_coo_b_jvp(g, x, entries, indices, rhs, solver):  # noqa: ARG001
 defjvp(solve_coo, solve_coo_entries_jvp, None, solve_coo_b_jvp)
 
 
-def solve_coo_entries_vjp(ans, entries, indices, rhs, solver):  # noqa: ARG001
+def solve_coo_entries_vjp(
+    ans: NDArray,
+    entries: NDArray,
+    indices: tuple[NDArray[np.int_], NDArray[np.int_]],
+    rhs: NDArray,  # noqa: ARG001
+    solver: Solver,
+) -> Callable[[NDArray], NDArray]:
     """Reverse-mode derivative of :func:`solve_coo` for ``entries``."""
 
-    def vjp(g):
+    def vjp(g: NDArray) -> NDArray:
         x = solver.solve(g, transpose=True)
         i, j = indices
         return -x[i] * ans[j]
@@ -69,10 +99,16 @@ def solve_coo_entries_vjp(ans, entries, indices, rhs, solver):  # noqa: ARG001
     return vjp
 
 
-def solve_coo_b_vjp(ans, entries, indices, rhs, solver):  # noqa: ARG001
+def solve_coo_b_vjp(
+    ans: NDArray,  # noqa: ARG001
+    entries: NDArray,  # noqa: ARG001
+    indices: tuple[NDArray[np.int_], NDArray[np.int_]],  # noqa: ARG001
+    rhs: NDArray,
+    solver: Solver,
+) -> Callable[[NDArray], NDArray]:
     """Reverse-mode derivative of :func:`solve_coo` for ``rhs``."""
 
-    def vjp(g):
+    def vjp(g: NDArray) -> NDArray:
         return solver.solve(g, transpose=True)
 
     return vjp
