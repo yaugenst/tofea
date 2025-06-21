@@ -1,6 +1,7 @@
 """Linear system solver abstractions."""
 
 from abc import ABC, abstractmethod
+from collections.abc import Mapping
 from functools import partial
 from typing import Any
 
@@ -25,7 +26,9 @@ class Solver(ABC):
 class SuperLU(Solver):
     """`scipy.sparse.linalg.splu` wrapper."""
 
-    def __init__(self, **options: float | int | bool | str) -> None:
+    def __init__(
+        self, **options: float | int | bool | str | Mapping[str, bool]
+    ) -> None:
         """Create a new ``SuperLU`` solver instance."""
         # store solver-specific context on the instance to avoid cross-talk
         self._ctx: dict[str, Any] = {"splu": partial(splu, **options)}
