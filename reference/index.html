@@ -327,18 +327,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element.shape_funcs" class="md-nav__link">
+  <a href="#tofea.elements.Q4Element.gauss_points" class="md-nav__link">
     <span class="md-ellipsis">
-      shape_funcs
+      gauss_points
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element.symbols" class="md-nav__link">
+  <a href="#tofea.elements.Q4Element.grad_shape_funcs" class="md-nav__link">
     <span class="md-ellipsis">
-      symbols
+      grad_shape_funcs
     </span>
   </a>
   
@@ -799,18 +799,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element.shape_funcs" class="md-nav__link">
+  <a href="#tofea.elements.Q4Element.gauss_points" class="md-nav__link">
     <span class="md-ellipsis">
-      shape_funcs
+      gauss_points
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#tofea.elements.Q4Element.symbols" class="md-nav__link">
+  <a href="#tofea.elements.Q4Element.grad_shape_funcs" class="md-nav__link">
     <span class="md-ellipsis">
-      symbols
+      grad_shape_funcs
     </span>
   </a>
   
@@ -1314,48 +1314,15 @@ integration to ensure they remain correct.</p>
 
               <details class="quote">
                 <summary>Source code in <code>tofea/elements.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Element</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base dataclass for finite elements.&quot;&quot;&quot;</span>
 
@@ -1364,39 +1331,6 @@ integration to ensure they remain correct.</p>
     <span class="n">dz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
     <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>
     <span class="n">dtype</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_b_entries</span><span class="p">(</span>
-        <span class="n">rule</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-        <span class="n">shape_funcs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">sympy</span><span class="o">.</span><span class="n">Expr</span><span class="p">],</span>
-        <span class="n">clist</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">sympy</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">sympy</span><span class="o">.</span><span class="n">Expr</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return derivatives of ``shape_funcs`` with respect to ``clist``.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        rule</span>
-<span class="sd">            Scaling applied to each shape function before differentiation.</span>
-<span class="sd">        shape_funcs</span>
-<span class="sd">            Iterable containing the shape functions.</span>
-<span class="sd">        clist</span>
-<span class="sd">            Symbols with respect to which the derivatives are taken.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        tuple[sympy.Expr, ...]</span>
-<span class="sd">            The differentiated shape functions.</span>
-
-<span class="sd">        Examples</span>
-<span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; import sympy</span>
-<span class="sd">        &gt;&gt;&gt; x, y = sympy.symbols(&quot;x y&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; Element._b_entries([1, 0], [x * y], [x, y])</span>
-<span class="sd">        (y, 0)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">shape_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">shape_funcs</span><span class="p">])</span>
-        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">sympy</span><span class="o">.</span><span class="n">diff</span><span class="p">,</span> <span class="n">shape_list</span><span class="p">,</span> <span class="n">clist</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1446,6 +1380,11 @@ integration to ensure they remain correct.</p>
 
 
         <p>Four-node quadrilateral element.</p>
+<p>This class provides utilities shared by all quadrilateral elements
+implemented in :mod:<code>tofea</code>, namely Gauss quadrature points and the
+gradients of the bilinear shape functions.  Having these helpers in a
+common base class avoids code duplication in the concrete element
+implementations and gives this abstraction a clear purpose.</p>
 
 
 
@@ -1455,45 +1394,83 @@ integration to ensure they remain correct.</p>
 
               <details class="quote">
                 <summary>Source code in <code>tofea/elements.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Q4Element</span><span class="p">(</span><span class="n">Element</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Four-node quadrilateral element.&quot;&quot;&quot;</span>
+<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Q4Element</span><span class="p">(</span><span class="n">Element</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Four-node quadrilateral element.</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">sympy</span><span class="o">.</span><span class="n">Symbol</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the symbols used to define the element.&quot;&quot;&quot;</span>
+<span class="sd">    This class provides utilities shared by all quadrilateral elements</span>
+<span class="sd">    implemented in :mod:`tofea`, namely Gauss quadrature points and the</span>
+<span class="sd">    gradients of the bilinear shape functions.  Having these helpers in a</span>
+<span class="sd">    common base class avoids code duplication in the concrete element</span>
+<span class="sd">    implementations and gives this abstraction a clear purpose.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;a b x y&quot;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gauss_points</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the points for 2x2 Gauss quadrature.&quot;&quot;&quot;</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">shape_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">sympy</span><span class="o">.</span><span class="n">Expr</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return bilinear shape functions for a four-node element.&quot;&quot;&quot;</span>
+        <span class="n">gp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="o">-</span><span class="n">gp</span><span class="p">,</span> <span class="o">-</span><span class="n">gp</span><span class="p">),</span> <span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="o">-</span><span class="n">gp</span><span class="p">),</span> <span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">gp</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">gp</span><span class="p">,</span> <span class="n">gp</span><span class="p">)]</span>
 
-        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">),</span>
-        <span class="p">]</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">grad_shape_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return shape function gradients for local coordinates.&quot;&quot;&quot;</span>
+
+        <span class="n">dN_dxi</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta</span><span class="p">),</span>
+                <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta</span><span class="p">),</span>
+                <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">eta</span><span class="p">),</span>
+                <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">eta</span><span class="p">),</span>
+            <span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">dN_deta</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">xi</span><span class="p">),</span>
+                <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">xi</span><span class="p">),</span>
+                <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">xi</span><span class="p">),</span>
+                <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">xi</span><span class="p">),</span>
+            <span class="p">],</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">dN_dxi</span><span class="p">,</span> <span class="n">dN_deta</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1507,15 +1484,16 @@ integration to ensure they remain correct.</p>
 
 
 
-<div class="doc doc-object doc-attribute">
 
 
+<div class="doc doc-object doc-function">
 
-<h3 id="tofea.elements.Q4Element.shape_funcs" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">shape_funcs</span></code>
+
+<h3 id="tofea.elements.Q4Element.gauss_points" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">gauss_points</span><span class="p">()</span></code>
 
   <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
   </span>
 
 </h3>
@@ -1523,35 +1501,92 @@ integration to ensure they remain correct.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Return bilinear shape functions for a four-node element.</p>
+        <p>Return the points for 2x2 Gauss quadrature.</p>
 
+
+            <details class="quote">
+              <summary>Source code in <code>tofea/elements.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gauss_points</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the points for 2x2 Gauss quadrature.&quot;&quot;&quot;</span>
+
+    <span class="n">gp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="o">-</span><span class="n">gp</span><span class="p">,</span> <span class="o">-</span><span class="n">gp</span><span class="p">),</span> <span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="o">-</span><span class="n">gp</span><span class="p">),</span> <span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">gp</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">gp</span><span class="p">,</span> <span class="n">gp</span><span class="p">)]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
     </div>
 
 </div>
 
-<div class="doc doc-object doc-attribute">
+<div class="doc doc-object doc-function">
 
 
-
-<h3 id="tofea.elements.Q4Element.symbols" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">symbols</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
+<h3 id="tofea.elements.Q4Element.grad_shape_funcs" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">grad_shape_funcs</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Return the symbols used to define the element.</p>
+        <p>Return shape function gradients for local coordinates.</p>
 
+
+            <details class="quote">
+              <summary>Source code in <code>tofea/elements.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">grad_shape_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return shape function gradients for local coordinates.&quot;&quot;&quot;</span>
+
+    <span class="n">dN_dxi</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta</span><span class="p">),</span>
+            <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta</span><span class="p">),</span>
+            <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">eta</span><span class="p">),</span>
+            <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">eta</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">dN_deta</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">xi</span><span class="p">),</span>
+            <span class="o">-</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">xi</span><span class="p">),</span>
+            <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">xi</span><span class="p">),</span>
+            <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">xi</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">dN_dxi</span><span class="p">,</span> <span class="n">dN_deta</span>
+</code></pre></div></td></tr></table></div>
+            </details>
     </div>
 
 </div>
-
-
 
 
 
@@ -1596,7 +1631,23 @@ integration to ensure they remain correct.</p>
 
               <details class="quote">
                 <summary>Source code in <code>tofea/elements.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 78</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
 <span class="normal"> 79</span>
 <span class="normal"> 80</span>
 <span class="normal"> 81</span>
@@ -1628,22 +1679,7 @@ integration to ensure they remain correct.</p>
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Q4Element_K</span><span class="p">(</span><span class="n">Q4Element</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plane stress elasticity element.&quot;&quot;&quot;</span>
 
@@ -1654,9 +1690,10 @@ integration to ensure they remain correct.</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the 8x8 stiffness matrix for the element.</span>
 
-<span class="sd">        The matrix is computed symbolically and evaluated for the instance</span>
-<span class="sd">        parameters.  Small values below ``eps`` are zeroed out to keep the</span>
-<span class="sd">        matrix well conditioned.</span>
+<span class="sd">        The matrix is assembled using 2x2 Gauss quadrature instead of the</span>
+<span class="sd">        symbolic integration previously used.  This avoids the costly SymPy</span>
+<span class="sd">        computations and speeds up object construction significantly while</span>
+<span class="sd">        maintaining numerical precision.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1670,25 +1707,25 @@ integration to ensure they remain correct.</p>
 <span class="sd">        (8, 8)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span>
-        <span class="n">E</span><span class="p">,</span> <span class="n">nu</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;E nu&quot;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="n">B</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_b_entries</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_funcs</span><span class="p">,</span> <span class="mi">8</span> <span class="o">*</span> <span class="p">[</span><span class="n">x</span><span class="p">]),</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_b_entries</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_funcs</span><span class="p">,</span> <span class="mi">8</span> <span class="o">*</span> <span class="p">[</span><span class="n">y</span><span class="p">]),</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_b_entries</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_funcs</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]),</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
-
-        <span class="n">C</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">nu</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">nu</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">nu</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]])</span>
-
-        <span class="n">dK</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">C</span> <span class="o">*</span> <span class="n">B</span>
-        <span class="n">K</span> <span class="o">=</span> <span class="n">dK</span><span class="o">.</span><span class="n">integrate</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-        <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="n">K</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="n">a</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="p">,</span> <span class="n">E</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">e</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">}),</span>
+        <span class="n">C</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]],</span>
             <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
         <span class="p">)</span>
+
+        <span class="n">K</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">eta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauss_points</span><span class="p">():</span>
+            <span class="n">dN_dxi</span><span class="p">,</span> <span class="n">dN_deta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_shape_funcs</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span>
+
+            <span class="n">B</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dN_dxi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span>
+                <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dN_deta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span>
+                <span class="n">B</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dN_deta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span>
+                <span class="n">B</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dN_dxi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span>
+
+            <span class="n">K</span> <span class="o">+=</span> <span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">C</span> <span class="o">@</span> <span class="n">B</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span>
+
         <span class="n">K</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">K</span>
 </code></pre></div></td></tr></table></div>
@@ -1722,9 +1759,10 @@ integration to ensure they remain correct.</p>
     <div class="doc doc-contents ">
 
         <p>Return the 8x8 stiffness matrix for the element.</p>
-<p>The matrix is computed symbolically and evaluated for the instance
-parameters.  Small values below <code>eps</code> are zeroed out to keep the
-matrix well conditioned.</p>
+<p>The matrix is assembled using 2x2 Gauss quadrature instead of the
+symbolic integration previously used.  This avoids the costly SymPy
+computations and speeds up object construction significantly while
+maintaining numerical precision.</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -1805,7 +1843,22 @@ matrix well conditioned.</p>
 
               <details class="quote">
                 <summary>Source code in <code>tofea/elements.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
@@ -1831,19 +1884,7 @@ matrix well conditioned.</p>
 <span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Q4Element_T</span><span class="p">(</span><span class="n">Q4Element</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Heat conductivity element.&quot;&quot;&quot;</span>
 
@@ -1852,6 +1893,10 @@ matrix well conditioned.</p>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the 4x4 conductivity matrix for the element.</span>
+
+<span class="sd">        Similar to :class:`Q4Element_K`, the matrix is assembled numerically</span>
+<span class="sd">        using 2x2 Gauss quadrature.  This removes the dependency on SymPy for</span>
+<span class="sd">        runtime calculations and considerably reduces initialization time.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1865,21 +1910,20 @@ matrix well conditioned.</p>
 <span class="sd">        (4, 4)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">C</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
-        <span class="n">B</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_b_entries</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_funcs</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">[</span><span class="n">x</span><span class="p">]),</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_b_entries</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_funcs</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">[</span><span class="n">y</span><span class="p">]),</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
+        <span class="n">K</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
-        <span class="n">C</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([[</span><span class="n">k</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">k</span><span class="p">]])</span>
+        <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">eta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauss_points</span><span class="p">():</span>
+            <span class="n">dN_dxi</span><span class="p">,</span> <span class="n">dN_deta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_shape_funcs</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span>
 
-        <span class="n">dK</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">C</span> <span class="o">*</span> <span class="n">B</span>
-        <span class="n">K</span> <span class="o">=</span> <span class="n">dK</span><span class="o">.</span><span class="n">integrate</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-        <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="n">a</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">}),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="n">B</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dN_dxi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span>
+                <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dN_deta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span>
+
+            <span class="n">K</span> <span class="o">+=</span> <span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">C</span> <span class="o">@</span> <span class="n">B</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span>
+
         <span class="n">K</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">K</span>
 </code></pre></div></td></tr></table></div>
@@ -1913,6 +1957,9 @@ matrix well conditioned.</p>
     <div class="doc doc-contents ">
 
         <p>Return the 4x4 conductivity matrix for the element.</p>
+<p>Similar to :class:<code>Q4Element_K</code>, the matrix is assembled numerically
+using 2x2 Gauss quadrature.  This removes the dependency on SymPy for
+runtime calculations and considerably reduces initialization time.</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
