@@ -1,11 +1,12 @@
 """Autograd primitives used by the finite element routines."""
 
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 from autograd.extend import defjvp, defvjp, primitive
 from numpy.typing import NDArray
 from scipy.sparse import coo_matrix
+
 from tofea.solvers import Solver
 
 
