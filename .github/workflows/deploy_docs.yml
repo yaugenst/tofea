@@ -7,6 +7,9 @@ on:
     types:
       - completed
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     if: github.event.workflow_run.conclusion == 'success'
@@ -24,7 +27,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install .[dev]
+        run: pip install .[docs]
 
       - name: Build documentation
         run: mkdocs build
