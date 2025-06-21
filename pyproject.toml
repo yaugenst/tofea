@@ -27,7 +27,8 @@ dependencies = [
 tests = ["pytest", "pytest-cov"]
 examples = ["nlopt", "matplotlib"]
 all = ["tofea[tests,examples]"]
-dev = ["tofea[all]", "ruff", "mypy", "pre-commit"]
+docs = ["mkdocs", "mkdocstrings[python]"]
+dev = ["tofea[all,docs]", "ruff", "mypy", "pre-commit"]
 
 [project.urls]
 Source = "https://github.com/mrbaozi/tofea"
