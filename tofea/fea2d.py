@@ -100,6 +100,12 @@ class FEA2D(ABC):
         return np.add(self.dofmap[None], idxs[:, None].astype(np.uint32))
 
     @cached_property
+    def e2sdofmap_reshaped(self) -> NDArray[np.uint32]:
+        """Element mapping reshaped for tensor operations."""
+
+        return np.reshape(self.e2sdofmap.T, (-1, *self.shape))
+
+    @cached_property
     def keep_indices(
         self,
     ) -> tuple[NDArray[np.bool_], NDArray[np.uint32]]:
@@ -168,8 +174,12 @@ class FEA2D_K(FEA2D):
 
     def compliance(self, x: NDArray, displacement: NDArray) -> NDArray:
         """Compliance objective for ``x`` and ``displacement``."""
-        dofmap = np.reshape(self.e2sdofmap.T, (-1, *self.shape))
-        c = anp.einsum("ixy,ij,jxy->xy", displacement[dofmap], self.element, displacement[dofmap])
+        c = anp.einsum(
+            "ixy,ij,jxy->xy",
+            displacement[self.e2sdofmap_reshaped],
+            self.element,
+            displacement[self.e2sdofmap_reshaped],
+        )
         return anp.sum(x * c)
 
 
