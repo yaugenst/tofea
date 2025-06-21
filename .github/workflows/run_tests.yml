@@ -34,7 +34,7 @@ jobs:
         restore-keys: ${{ runner.os }}-${{ matrix.python-version }}-pip-
 
     - name: Install dependencies
-      run: pip install .[dev]
+      run: pip install -e .[dev]
 
     - name: Lint with ruff
       run: ruff check .
@@ -46,7 +46,7 @@ jobs:
       run: mypy tofea
 
     - name: Test with pytest
-      run: pytest --cov tofea
+      run: pytest --doctest-modules --cov tofea
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3

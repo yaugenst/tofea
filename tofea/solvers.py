@@ -42,7 +42,21 @@ class SuperLU(Solver):
 
 
 def get_solver(solver: str) -> Solver:
-    """Return a solver instance by name."""
+    """Return a solver instance by name.
+
+    Parameters
+    ----------
+    solver
+        Name of the solver implementation. Currently only ``"SuperLU"`` is
+        available.
+
+    Examples
+    --------
+    >>> from tofea.solvers import get_solver, Solver
+    >>> s = get_solver("SuperLU")
+    >>> isinstance(s, Solver)
+    True
+    """
     match solver:
         case "SuperLU":
             return SuperLU(

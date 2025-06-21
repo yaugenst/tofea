@@ -16,7 +16,22 @@ from tofea.solvers import Solver, get_solver
 
 @dataclass
 class FEA2D(ABC):
-    """Abstract base class for 2D finite element models."""
+    """Abstract base class for 2D finite element models.
+
+    Parameters
+    ----------
+    fixed
+        Boolean mask indicating which degrees of freedom are fixed.
+    solver
+        Name of the backend solver to use.
+    dx, dy
+        Element dimensions in ``x`` and ``y`` direction.
+
+    Notes
+    -----
+    Subclasses must provide the element matrix and a mapping from element
+    degrees of freedom to system degrees of freedom.
+    """
 
     fixed: NDArray[np.bool_]
     solver: str = DEFAULT_SOLVER
@@ -116,7 +131,19 @@ class FEA2D(ABC):
 
 @dataclass
 class FEA2D_K(FEA2D):
-    """Finite element model for compliance problems."""
+    """Finite element model for compliance problems.
+
+    This model solves small deformation elasticity problems using bilinear
+    quadrilateral elements.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> fixed = np.zeros((2, 2, 2), dtype=bool)
+    >>> fem = FEA2D_K(fixed)
+    >>> fem.element.shape
+    (8, 8)
+    """
 
     dof_dim: int = 2
     e: float = 1.0
@@ -150,7 +177,16 @@ class FEA2D_K(FEA2D):
 
 @dataclass
 class FEA2D_T(FEA2D):
-    """Finite element model for heat conduction problems."""
+    """Finite element model for heat conduction problems.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> fixed = np.zeros((2, 2), dtype=bool)
+    >>> fem = FEA2D_T(fixed)
+    >>> fem.element.shape
+    (4, 4)
+    """
 
     dof_dim: int = 1
     k: float = 1.0

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Heat conduction optimization example using 2D finite elements."""
 
 import autograd.numpy as np
 import matplotlib.pyplot as plt

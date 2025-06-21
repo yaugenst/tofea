@@ -16,6 +16,13 @@ The package contains examples of topology optimization for 2D and 3D heat and co
 
 To run the examples, there are some additional dependencies for optimization and plotting, so install using `pip install tofea[examples]`.
 
+```bash
+python examples/compliance_2d.py
+```
+
+This will start an optimization run and display the design evolution in a
+window. The heat conduction example can be run in the same way.
+
 ## Documentation
 
 The API reference is built with [MkDocs](https://www.mkdocs.org/) and
