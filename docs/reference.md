@@ -8,5 +8,6 @@ integration to ensure they remain correct.
 ::: tofea
 ::: tofea.elements
 ::: tofea.fea2d
+::: tofea.boundary_conditions
 ::: tofea.primitives
 ::: tofea.solvers
