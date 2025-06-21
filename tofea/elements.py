@@ -3,7 +3,6 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Any
 
 import numpy as np
 import sympy
@@ -25,7 +24,7 @@ class Element:
         rule: Iterable[int],
         shape_funcs: Iterable[sympy.Expr],
         clist: Iterable[sympy.Symbol],
-    ) -> tuple[Any, ...]:
+    ) -> tuple[sympy.Expr, ...]:
         """Return derivatives of ``shape_funcs`` with respect to ``clist``.
 
         Parameters
@@ -39,7 +38,7 @@ class Element:
 
         Returns
         -------
-        tuple[Any, ...]
+        tuple[sympy.Expr, ...]
             The differentiated shape functions.
 
         Examples
