@@ -18,10 +18,9 @@ class Solver(ABC):
 
 
 class SuperLU(Solver):
-    _ctx: dict = {}
-
     def __init__(self, **options):
-        self._ctx["splu"] = partial(splu, **options)
+        # store solver-specific context on the instance to avoid cross-talk
+        self._ctx: dict = {"splu": partial(splu, **options)}
 
     def factor(self, m: csc_matrix) -> None:
         self._ctx["factorization"] = self._ctx["splu"](m)
