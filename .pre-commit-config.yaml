@@ -17,6 +17,7 @@ repos:
         name: pytest
         entry: pytest --doctest-modules --cov tofea
         language: system
+        pass_filenames: false
       - id: build
         name: build
         entry: mkdocs build

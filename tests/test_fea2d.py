@@ -59,12 +59,8 @@ class TestFEA2DK:
     def test_compliance_grads(self, fea2d_k_instance, x_and_b, rng):
         x, _ = x_and_b
         d = rng.random(fea2d_k_instance.dofs.shape)
-        check_grads(
-            lambda x_: fea2d_k_instance.compliance(x_, d), modes=["fwd", "rev"], order=1
-        )(x)
-        check_grads(
-            lambda d_: fea2d_k_instance.compliance(x, d_), modes=["fwd", "rev"], order=1
-        )(d)
+        check_grads(lambda x_: fea2d_k_instance.compliance(x_, d), modes=["fwd", "rev"], order=1)(x)
+        check_grads(lambda d_: fea2d_k_instance.compliance(x, d_), modes=["fwd", "rev"], order=1)(d)
 
 
 class TestFEA2DT:

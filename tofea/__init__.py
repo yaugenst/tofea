@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 __all__ = [
+    "DEFAULT_SOLVER",
+    "__version__",
     "elements",
     "fea2d",
     "primitives",
     "solvers",
-    "DEFAULT_SOLVER",
-    "__version__",
 ]
 
 __version__ = "0.1.0"

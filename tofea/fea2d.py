@@ -169,9 +169,7 @@ class FEA2D_K(FEA2D):
     def compliance(self, x: NDArray, displacement: NDArray) -> NDArray:
         """Compliance objective for ``x`` and ``displacement``."""
         dofmap = np.reshape(self.e2sdofmap.T, (-1, *self.shape))
-        c = anp.einsum(
-            "ixy,ij,jxy->xy", displacement[dofmap], self.element, displacement[dofmap]
-        )
+        c = anp.einsum("ixy,ij,jxy->xy", displacement[dofmap], self.element, displacement[dofmap])
         return anp.sum(x * c)
 
 
