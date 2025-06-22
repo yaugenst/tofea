@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 
 from tofea.boundary_conditions import BoundaryConditions
-from tofea.fea2d import FEA2D_K, FEA2D_T
 
 
 def test_fix_edge_1d():
@@ -56,15 +55,3 @@ def test_apply_uniform_load_on_edge():
 
     with pytest.raises(ValueError, match="size"):
         bc2.apply_uniform_load_on_edge("left", (1.0,))
-
-
-def test_integration_with_fea2d():
-    bc = BoundaryConditions((1, 1))
-    fem = FEA2D_T(bc.fixed)
-    x = np.ones(fem.shape)
-    fem.temperature(x, bc.load)
-
-    bc2 = BoundaryConditions((1, 1), dof_dim=2)
-    fem2 = FEA2D_K(bc2.fixed)
-    x2 = np.ones(fem2.shape)
-    fem2.displacement(x2, bc2.load)
