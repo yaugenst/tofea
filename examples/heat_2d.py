@@ -8,6 +8,7 @@ import scipy.ndimage
 from autograd import value_and_grad
 from autograd.extend import defvjp, primitive
 
+from tofea.boundary_conditions import BoundaryConditions
 from tofea.fea2d import FEA2D_T
 
 gaussian_filter = primitive(scipy.ndimage.gaussian_filter)

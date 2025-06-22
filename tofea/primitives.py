@@ -6,9 +6,26 @@ import autograd.numpy as anp
 import numpy as np
 from autograd.extend import defjvp, defvjp, primitive
 from numpy.typing import NDArray
-from scipy.sparse import coo_matrix
+from scipy.sparse import coo_matrix, csc_matrix
 
 from tofea.solvers import Solver
+
+
+def _pattern_signature(m: csc_matrix) -> tuple[NDArray[np.int_], NDArray[np.int_], tuple[int, int]]:
+    """Return a signature describing the sparsity pattern of ``m``."""
+
+    return m.indices.copy(), m.indptr.copy(), m.shape
+
+
+def _same_pattern(
+    m: csc_matrix, sig: tuple[NDArray[np.int_], NDArray[np.int_], tuple[int, int]]
+) -> bool:
+    """Return ``True`` if ``m`` matches the sparsity pattern ``sig``."""
+
+    indices, indptr, shape = sig
+    return (
+        m.shape == shape and np.array_equal(m.indices, indices) and np.array_equal(m.indptr, indptr)
+    )
 
 
 @primitive
@@ -49,8 +66,14 @@ def solve_coo(
     """
 
     a = coo_matrix((entries, indices)).tocsc()
-    solver.clear()
-    solver.factor(a)
+    ctx = getattr(solver, "_ctx", {})
+    pattern = ctx.get("pattern")
+    if pattern is not None and _same_pattern(a, pattern):
+        solver.refactor_numerical(a)
+    else:
+        solver.clear()
+        solver.factor_full(a)
+        ctx["pattern"] = _pattern_signature(a)
     return solver.solve(rhs)
 
 
